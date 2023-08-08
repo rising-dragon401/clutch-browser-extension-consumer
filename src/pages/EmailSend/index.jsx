@@ -6,6 +6,7 @@ import { ReceiveIcon, SendIcon } from "../../components/Svg";
 
 import { useNavigate } from "react-router-dom";
 import Input from "../../components/Input";
+import { createWallet } from "../../api/accounts";
 
 const Container = styled.div`
   padding: 16px;
@@ -25,7 +26,7 @@ function EmailSendPage() {
   }, []);
 
   const createWalletOnClicked = async () => {
-    console.log("email", email);
+    let ret = await createWallet(email);    
   };
 
   return (
