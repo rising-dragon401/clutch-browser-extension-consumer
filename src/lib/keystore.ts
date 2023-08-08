@@ -35,14 +35,17 @@ export default class KeyStore {
 
   public async setEmail(email) {
     try {
-      await setLocalStorage("email", email);
+      await setLocalStorage("clutch-wallet-email", email);
     } catch (e) {
       console.log("Error on setEmail function:", e);
     }
   }
 
   public async getEmail(): Promise<string> {
-    const val: string = await getLocalStorage("email");
+    let val: string = await getLocalStorage("clutch-wallet-email");
+    if (val == undefined) {
+      return "";
+    }
     return val;
   }
 

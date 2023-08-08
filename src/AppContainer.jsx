@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/Home/index";
 import { styled } from "@mui/material/styles";
@@ -34,6 +34,9 @@ import Nft from "./pages/Nft";
 import SingleNft from "./pages/Nft/SingleNft";
 import List from "./pages/Nft/List";
 import SingleList from "./pages/Nft/SingleList";
+import KeyStore from "./lib/keystore";
+import WelcomePage from "./pages/Welcome";
+import EmailSendPage from "./pages/EmailSend";
 
 const Container = styled("div")(({ theme }) => ({
   width: "375px",
@@ -41,13 +44,31 @@ const Container = styled("div")(({ theme }) => ({
   // color: theme.palette.background_colors.purple_25
 }));
 
+const keyStore = KeyStore.getInstance();
+
 function AppContainer() {
   const theme = useTheme();
+  const [email, setEmail] = useState();
+  const loadEmail = async () => {
+    let _email = await keyStore.getEmail();
+    console.log("addr", _email);
+    setEmail(_email);
+  };
+
+  useEffect(() => {
+    loadEmail();
+  }, []);
 
   return (
     <Container>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/"
+          element={email != "" ? <HomePage /> : <WelcomePage />}
+        />
+
+        <Route path="/create_wallet" element={<EmailSendPage />} />
+
         <Route path="/check_assets" element={<CheckAssets />} />
         <Route path="/security" element={<SecurityPage />} />
         <Route path="/2fa" element={<TwoFA />} />
@@ -92,7 +113,7 @@ function AppContainer() {
         {/* <Route path="/check_assets" element={<CheckAssets />} /> */}
         <Route path="menu/*" element={<Menu />} />
       </Routes>
-      <Footer />
+      {email != "" && <Footer />}
     </Container>
   );
 }

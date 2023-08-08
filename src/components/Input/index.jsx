@@ -24,10 +24,16 @@ const InputField = styled.input`
   }
 `;
 
-function Input({ placeholder }) {
+function Input({ placeholder, value, onChange }) {
   return (
     <Box>
-      <InputField placeholder={placeholder} />
+      <InputField
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => {
+          onChange(e);
+        }}
+      />
     </Box>
   );
 }

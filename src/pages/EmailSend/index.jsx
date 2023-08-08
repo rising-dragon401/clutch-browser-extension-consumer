@@ -1,17 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import styled from "@emotion/styled";
 import Button from "../../components/Button";
 import { ReceiveIcon, SendIcon } from "../../components/Svg";
 
 import { useNavigate } from "react-router-dom";
+import Input from "../../components/Input";
 
 const Container = styled.div`
   padding: 16px;
 `;
 
-function WelcomePage() {
-  const navigate = useNavigate();
+function EmailSendPage() {
+  const [email, setEmail] = useState("");
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setOpen(true);
@@ -21,6 +23,10 @@ function WelcomePage() {
       clearTimeout(timeout);
     };
   }, []);
+
+  const createWalletOnClicked = async () => {
+    console.log("email", email);
+  };
 
   return (
     <Box>
@@ -36,21 +42,19 @@ function WelcomePage() {
             marginTop: "16px",
           }}
         >
-          <Button
-            size="fullWidth"
-            variant="primary"
-            height="44px"
-            label="Create Wallet"
-            icon={<ReceiveIcon width="19px" height="18px" />}
-            onClick={() => navigate("/create_wallet")}
+          <Input
+            placeholder={"Enter email address"}
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
           />
           <Button
             size="fullWidth"
             variant="primary"
             height="44px"
-            label="Recover Wallet"
-            icon={<SendIcon width="19px" height="18px" />}
-            onClick={() => console.log("Button clicked!")}
+            label="Send Email"
+            onClick={() => createWalletOnClicked()}
           />
         </Box>
       </Container>
@@ -58,4 +62,4 @@ function WelcomePage() {
   );
 }
 
-export default WelcomePage;
+export default EmailSendPage;
