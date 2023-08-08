@@ -33,6 +33,19 @@ export default class KeyStore {
     return "";
   }
 
+  public async setEmail(email) {
+    try {
+      await setLocalStorage("email", email);
+    } catch (e) {
+      console.log("Error on setEmail function:", e);
+    }
+  }
+
+  public async getEmail(): Promise<string> {
+    const val: string = await getLocalStorage("email");
+    return val;
+  }
+
   /**
    * create a new keystore and delete the old
    * @param password
