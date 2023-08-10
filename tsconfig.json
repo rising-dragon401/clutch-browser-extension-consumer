@@ -1,9 +1,17 @@
 {
-  "compilerOptions": {    
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@src/*": ["src/*"]
+    },
     "jsx": "react",
     "module": "es6",
     "target": "es6",
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "strict": true,
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true
   }
 }
