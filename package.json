@@ -39,6 +39,7 @@
     "@mui/material": "^5.11.15",
     "axios": "^1.4.0",
     "ethers": "^6.6.4",
+    "material-react-toastify": "^2.0.1",
     "react-redux": "^8.0.5",
     "react-responsive-modal": "^6.4.1",
     "react-router-dom": "^6.10.0",

@@ -48,11 +48,11 @@ const keyStore = KeyStore.getInstance();
 
 function AppContainer() {
   const theme = useTheme();
-  const [email, setEmail] = useState();
+  const [jwt, setJWT] = useState();
   const loadEmail = async () => {
-    let _email = await keyStore.getEmail();
-    console.log("addr", _email);
-    setEmail(_email);
+    let _jwt = await keyStore.getJWT();
+    console.log("addr", _jwt);
+    setJWT(_jwt);
   };
 
   useEffect(() => {
@@ -62,10 +62,7 @@ function AppContainer() {
   return (
     <Container>
       <Routes>
-        <Route
-          path="/"
-          element={email != "" ? <HomePage /> : <WelcomePage />}
-        />
+        <Route path="/" element={jwt != "" ? <HomePage /> : <WelcomePage />} />
 
         <Route path="/create_wallet" element={<EmailSendPage />} />
 
@@ -113,7 +110,7 @@ function AppContainer() {
         {/* <Route path="/check_assets" element={<CheckAssets />} /> */}
         <Route path="menu/*" element={<Menu />} />
       </Routes>
-      {email != "" && <Footer />}
+      {jwt != "" && <Footer />}
     </Container>
   );
 }

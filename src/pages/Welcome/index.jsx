@@ -12,15 +12,6 @@ const Container = styled.div`
 
 function WelcomePage() {
   const navigate = useNavigate();
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setOpen(true);
-    }, 100);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
 
   return (
     <Box>

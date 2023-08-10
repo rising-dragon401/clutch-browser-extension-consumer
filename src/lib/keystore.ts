@@ -49,6 +49,22 @@ export default class KeyStore {
     return val;
   }
 
+  public async setJWT(jwt) {
+    try {
+      await setLocalStorage("clutch-wallet-jwt", jwt);
+    } catch (e) {
+      console.log("Error on setJWT function:", e);
+    }
+  }
+
+  public async getJWT(): Promise<string> {
+    let val: string = await getLocalStorage("clutch-wallet-jwt");
+    if (val == undefined) {
+      return "";
+    }
+    return val;
+  }
+
   /**
    * create a new keystore and delete the old
    * @param password

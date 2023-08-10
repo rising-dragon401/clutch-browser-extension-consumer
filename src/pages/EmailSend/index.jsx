@@ -7,26 +7,25 @@ import { ReceiveIcon, SendIcon } from "../../components/Svg";
 import { useNavigate } from "react-router-dom";
 import Input from "../../components/Input";
 import { createWallet } from "../../api/accounts";
+import KeyStore from "./../../lib/keystore";
 
 const Container = styled.div`
   padding: 16px;
 `;
 
+const keyStore = KeyStore.getInstance();
+
 function EmailSendPage() {
   const [email, setEmail] = useState("");
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setOpen(true);
-    }, 100);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
+  const navigate = useNavigate();
 
   const createWalletOnClicked = async () => {
-    let ret = await createWallet(email);    
+    let jwt = await createWallet(email);
+    console.log(jwt);
+    if (jwt != null) {
+      keyStore.setJWT(jwt);
+      navigate("/");
+    }
   };
 
   return (
