@@ -9,7 +9,7 @@ interface IWalletContext {
   account: string;
   walletType: string;
   walletAddress: string;
-  getWalletAddressByEmail: (email: string) => Promise<string>;
+  getWalletAddressByEmail: (email: string) => Promise<any>;
   getEthBalance: (addr: string) => Promise<string>;
   createWalletByEmail: (email: string) => Promise<any>;
 }
@@ -36,18 +36,21 @@ export const WalletContextProvider = ({ children }: any) => {
   const [walletType, setWalletType] = useState<string>("");
 
   const getEthBalance = async (addr: string = null) => {
-    let address = "";
-    if (addr == null) {
+    let address = addr;
+    if (address == null) {
       address = walletAddress;
     }
     const res = await eth.getBalance(address);
+    console.log("balance", ethers.formatEther(res));
     return ethers.formatEther(res);
   };
 
   const getWalletAddressByEmail = async (email: string) => {
-    let ret = await api.account.getAddrFromEmail(email);
-    console.log("get wallet address by email", ret);
-    return "";
+    let ret: any = await api.account.getAccountFromEmail(email);
+    if (ret.status == "Success") {
+      setWalletAddress(ret.payload.Success.wallet_address);
+    }
+    return ret.payload.Success;
   };
 
   const createWalletByEmail = async (email: string) => {

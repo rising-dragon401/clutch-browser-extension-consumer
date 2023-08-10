@@ -9,14 +9,17 @@ import TotalValue from "./components/TotalValue";
 import DialogPopup from "../../components/DialogPopup";
 import { useNavigate } from "react-router-dom";
 import useWalletContext from "../../context/hooks/useWalletContext";
+import KeyStore from "./../../lib/keystore";
 
 const Container = styled.div`
   padding: 16px;
 `;
 
+const keyStore = KeyStore.getInstance();
+
 function HomePage() {
   const [open, setOpen] = React.useState(false);
-  const { getEthBalance } = useWalletContext();
+  const { getEthBalance, getWalletAddressByEmail } = useWalletContext();
   const navigate = useNavigate();
 
   const handleClose = () => {
@@ -28,13 +31,17 @@ function HomePage() {
   };
 
   const getEther = async () => {
-    let balance = await getEthBalance();
+    let email = await keyStore.getEmail();
+    let account = await getWalletAddressByEmail(email);
+    console.log("account", account);
+    let balance = await getEthBalance(account.wallet_address);
   };
   useEffect(() => {
     const timeout = setTimeout(() => {
       setOpen(true);
     }, 100);
 
+    getEther();
     return () => {
       clearTimeout(timeout);
     };
