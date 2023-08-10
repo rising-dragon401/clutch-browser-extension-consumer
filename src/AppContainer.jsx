@@ -37,6 +37,7 @@ import SingleList from "./pages/Nft/SingleList";
 import KeyStore from "./lib/keystore";
 import WelcomePage from "./pages/Welcome";
 import EmailSendPage from "./pages/EmailSend";
+import { removeLocalStorage } from "./lib/tools";
 
 const Container = styled("div")(({ theme }) => ({
   width: "375px",
@@ -49,14 +50,14 @@ const keyStore = KeyStore.getInstance();
 function AppContainer() {
   const theme = useTheme();
   const [jwt, setJWT] = useState();
-  const loadEmail = async () => {
+  const loadWalletInfo = async () => {
     let _jwt = await keyStore.getJWT();
-    console.log("addr", _jwt);
     setJWT(_jwt);
   };
 
   useEffect(() => {
-    loadEmail();
+    loadWalletInfo();
+    // removeLocalStorage("clutch-wallet-jwt");
   }, []);
 
   return (

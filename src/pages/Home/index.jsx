@@ -8,6 +8,7 @@ import { ReceiveIcon, SendIcon } from "../../components/Svg";
 import TotalValue from "./components/TotalValue";
 import DialogPopup from "../../components/DialogPopup";
 import { useNavigate } from "react-router-dom";
+import useWalletContext from "../../context/hooks/useWalletContext";
 
 const Container = styled.div`
   padding: 16px;
@@ -15,6 +16,7 @@ const Container = styled.div`
 
 function HomePage() {
   const [open, setOpen] = React.useState(false);
+  const { getEthBalance } = useWalletContext();
   const navigate = useNavigate();
 
   const handleClose = () => {
@@ -25,6 +27,9 @@ function HomePage() {
     navigate("/security");
   };
 
+  const getEther = async () => {
+    let balance = await getEthBalance();
+  };
   useEffect(() => {
     const timeout = setTimeout(() => {
       setOpen(true);

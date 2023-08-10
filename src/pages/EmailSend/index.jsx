@@ -6,7 +6,7 @@ import { ReceiveIcon, SendIcon } from "../../components/Svg";
 
 import { useNavigate } from "react-router-dom";
 import Input from "../../components/Input";
-import { createWallet } from "../../api/accounts";
+import useWalletContext from "../../context/hooks/useWalletContext";
 import KeyStore from "./../../lib/keystore";
 
 const Container = styled.div`
@@ -18,14 +18,13 @@ const keyStore = KeyStore.getInstance();
 function EmailSendPage() {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
+  const { createWalletByEmail } = useWalletContext();
 
   const createWalletOnClicked = async () => {
-    let jwt = await createWallet(email);
-    console.log(jwt);
-    if (jwt != null) {
-      keyStore.setJWT(jwt);
-      navigate("/");
-    }
+    let ret = await createWalletByEmail(email);
+    keyStore.setJWT(ret.jwt);
+    keyStore.setEmail(email);
+    navigate("/");
   };
 
   return (
