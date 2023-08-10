@@ -30,7 +30,7 @@ function TotalValue() {
         }}
       >
         <Box>
-          <Typography variant="h2"> $ 2,972.00 </Typography>
+          <Typography variant="h2"> $ 0.0 </Typography>
         </Box>
         <Box>
           <Box>
@@ -38,7 +38,7 @@ function TotalValue() {
               variant="caption"
               sx={{ color: theme.palette.success.light }}
             >
-              +$172.00
+              +$0.0
             </Typography>
           </Box>
           <Box>

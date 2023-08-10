@@ -1,8 +1,5 @@
-import IconEth from "../assets/tokens/eth.svg";
-
 export const assetsList = [
   {
-    icon: IconEth,
     symbol: "ETH",
   },
 ];

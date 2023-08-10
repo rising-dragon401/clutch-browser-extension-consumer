@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { WalletIcon, MenuIcon, CopyIcon } from "../Svg";
+import KeyStore from "../../lib/keystore";
 
 const AccountList = styled("div")(({ theme }) => ({
   width: "154px",
@@ -17,9 +18,21 @@ const AccountList = styled("div")(({ theme }) => ({
   flexWrap: 0,
 }));
 
+const keyStore = KeyStore.getInstance();
+
 function Header(props) {
   const theme = useTheme();
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+
+  async function showEmail() {
+    let _email = await keyStore.getEmail();
+    console.log("email", _email);
+    setEmail(_email);
+  }
+  useEffect(() => {
+    showEmail();
+  }, []);
   return (
     <Box
       key={props.page}
@@ -38,7 +51,7 @@ function Header(props) {
       <Box>
         <AccountList>
           <Box>-</Box>
-          <Box>Larabae.eth</Box>
+          <Box>{email}</Box>
           <Box>
             <CopyIcon
               color={theme.palette.key_colors_interactions.primary_hover_550}
