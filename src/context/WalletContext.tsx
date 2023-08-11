@@ -3,22 +3,24 @@ import { ethers } from "ethers";
 import config from "../config";
 import api from "../lib/api";
 
-const eth = new ethers.JsonRpcProvider(config.rpcProvider);
+const ethProvider = new ethers.JsonRpcProvider(config.rpcProvider);
 interface IWalletContext {
-  eth: ethers.JsonRpcProvider;
+  ethProvider: ethers.JsonRpcProvider;
   account: string;
   walletType: string;
   walletAddress: string;
+  ethBalance: string;
   getWalletAddressByEmail: (email: string) => Promise<any>;
   getEthBalance: (addr: string) => Promise<string>;
   createWalletByEmail: (email: string) => Promise<any>;
 }
 
 export const WalletContext = createContext<IWalletContext>({
-  eth,
+  ethProvider,
   account: "",
   walletAddress: "",
   walletType: "",
+  ethBalance: "",
   getWalletAddressByEmail: async (email: string) => {
     return "";
   },
@@ -34,14 +36,16 @@ export const WalletContextProvider = ({ children }: any) => {
   const [account, setAccount] = useState<string>("");
   const [walletAddress, setWalletAddress] = useState<string>("");
   const [walletType, setWalletType] = useState<string>("");
-
-  const getEthBalance = async (addr: string = null) => {
+  const [ethBalance, setEthBalance] = useState<string>("0.0");
+  const getEthBalance = async (addr: string = "") => {
+    if (addr == "" && walletAddress == "") return;
     let address = addr;
-    if (address == null) {
+    if (address == "") {
       address = walletAddress;
     }
-    const res = await eth.getBalance(address);
-    console.log("balance", ethers.formatEther(res));
+
+    const res = await ethProvider.getBalance(address);
+    setEthBalance(ethers.formatEther(res));
     return ethers.formatEther(res);
   };
 
@@ -60,13 +64,25 @@ export const WalletContextProvider = ({ children }: any) => {
     return ret.payload.Success;
   };
 
+  useEffect(() => {
+    const interval = setInterval(
+      (function getEthBalanceInterval(): any {
+        console.log("get balance function called");
+        getEthBalance();
+        return getEthBalanceInterval;
+      })(),
+      8000
+    );
+    return () => clearInterval(interval);
+  }, [walletAddress]);
   return (
     <WalletContext.Provider
       value={{
-        eth,
+        ethProvider,
         account,
         walletType,
         walletAddress,
+        ethBalance,
         getWalletAddressByEmail,
         createWalletByEmail,
         getEthBalance,

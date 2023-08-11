@@ -33,7 +33,7 @@ export default class KeyStore {
     return "";
   }
 
-  public async setEmail(email) {
+  public async setEmail(email: string) {
     try {
       await setLocalStorage("clutch-wallet-email", email);
     } catch (e) {
@@ -49,7 +49,7 @@ export default class KeyStore {
     return val;
   }
 
-  public async setJWT(jwt) {
+  public async setJWT(jwt: string) {
     try {
       await setLocalStorage("clutch-wallet-jwt", jwt);
     } catch (e) {
