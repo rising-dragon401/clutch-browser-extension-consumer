@@ -13,6 +13,8 @@ import KeyStore from "./../../lib/keystore";
 import TokenInfoItem from "../../components/TokenInfoItem";
 
 import EthIcon from "../../assets/tokens/eth.svg";
+import { removeLocalStorage } from "../../lib/tools";
+import { assetsList } from "../../config/local";
 const Container = styled.div`
   padding: 16px;
 `;
@@ -21,8 +23,8 @@ const keyStore = KeyStore.getInstance();
 
 function HomePage() {
   const [open, setOpen] = React.useState(false);
-  const [eth, setEthBalance] = useState(0);
-  const { getEthBalance, getWalletAddressByEmail } = useWalletContext();
+  const { getEthBalance, getWalletAddressByEmail, ethBalance } =
+    useWalletContext();
   const navigate = useNavigate();
 
   const handleClose = () => {
@@ -33,22 +35,21 @@ function HomePage() {
     navigate("/security");
   };
 
-  const getEther = async () => {
-    let email = await keyStore.getEmail();
-    let account = await getWalletAddressByEmail(email);
-    console.log("account", account);
-    let balance = await getEthBalance(account.wallet_address);
-    setEthBalance(balance);
+  const getWallet = async () => {
+    let email = keyStore.getEmail();
+    if (email != "") {
+      await getWalletAddressByEmail(email);
+      await getEthBalance();
+    }
   };
   useEffect(() => {
-    getEther();
-    // const timeout = setTimeout(() => {
-    //   setOpen(true);
-    // }, 100);
+    getWallet();
 
-    // return () => {
-    //   clearTimeout(timeout);
-    // };
+    console.log(assetsList, "assetsList");
+    // async function callRemoveLocalStorage() {
+    //   await removeLocalStorage("clutch-wallet-email");
+    // }
+    // callRemoveLocalStorage();
   }, []);
 
   return (
@@ -79,7 +80,7 @@ function HomePage() {
             height="44px"
             label="Send"
             icon={<SendIcon width="19px" height="18px" />}
-            onClick={() => console.log("Button clicked!")}
+            onClick={() => navigate("/send/home")}
           />
         </Box>
         <Box
@@ -93,7 +94,7 @@ function HomePage() {
           <TokenInfoItem
             tokenName={"Ethereum"}
             unit={"ETH"}
-            amount={eth}
+            amount={ethBalance}
             tokenPrice={"1000"}
             diff={"12.45"}
             icon={EthIcon}
