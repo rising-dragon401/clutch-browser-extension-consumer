@@ -95,9 +95,13 @@ export const WalletContextProvider = ({ children }: any) => {
     try {
       setIsRequesting(true);
       let ret: any = await api.account.create({ email, code });
-      setWalletAddress(ret.payload.Success.contract_wallet_addr);
-      setWalletType("eoa");
-      return ret.payload.Success;
+      if(ret.status == "success") {
+        setWalletAddress(ret.payload.Success.contract_wallet_addr);
+        setWalletType("eoa");
+        return ret;
+      } else {
+        return ret;
+      }
     } catch (e) {
       console.log("error ", e);
     } finally {

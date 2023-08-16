@@ -17,8 +17,8 @@ function EmailSendPage() {
   const [email, setEmail] = useState("");
   const [verifyCode, setVerifyCode] = useState("");
   const [isSentVerify, setIsSentVerify] = useState(false);
-  const navigate = useNavigate();
   const { createWalletByEmail, verifyEmail, isRequesting } = useWalletContext();
+  const [error, setError] = useState("");
 
   const sendVerificationCode = async () => {
     let ret = await verifyEmail(email);
@@ -26,9 +26,13 @@ function EmailSendPage() {
   };
 
   const checkVerifyCodeAndCreate = async () => {
-    createWalletByEmail(email, v);
-    // keyStore.setJWT(ret.jwt);
-    // keyStore.setEmail(email);
+    let ret = await createWalletByEmail(email, verifyCode);
+    if(ret.status == "success") {
+      keyStore.setJWT(ret.payload.Success.jwt);
+      keyStore.setEmail(email);
+    } else {
+      setError(ret.payload.Error.error_message);
+    }
     // navigate("/");
   };
 
@@ -62,7 +66,7 @@ function EmailSendPage() {
               onChange={(e) => {
                 setVerifyCode(e.target.value);
               }}
-              onClick={() => checkVerifyCodeAndCreate()}
+              onClick={() => sendVerificationCode()}
             />
           ) : (
             <Button
@@ -76,6 +80,18 @@ function EmailSendPage() {
             />
           )}
         </Box>
+        {isSentVerify == true && (
+          <Button
+            size="fullWidth"
+            variant="primary"
+            height="44px"
+            label="Conintue"
+            style={{marginTop: "16px"}}
+            onClick={() => checkVerifyCodeAndCreate()}
+          />
+        )}
+
+        {error && <p>{error}</p>}
       </Container>
     </Box>
   );
