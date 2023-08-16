@@ -13,6 +13,7 @@ interface IWalletContext {
   getWalletAddressByEmail: (email: string) => Promise<any>;
   getEthBalance: (addr: string) => Promise<string>;
   createWalletByEmail: (email: string) => Promise<any>;
+  verifyEmail: (email:string) => Promise<any>;
 }
 
 export const WalletContext = createContext<IWalletContext>({
@@ -30,6 +31,9 @@ export const WalletContext = createContext<IWalletContext>({
   createWalletByEmail: async (email: string) => {
     return "";
   },
+  verifyEmail: async (email: string) => {
+    return "";
+  }
 });
 
 export const WalletContextProvider = ({ children }: any) => {
@@ -54,6 +58,13 @@ export const WalletContextProvider = ({ children }: any) => {
     if (ret.status == "Success") {
       setWalletAddress(ret.payload.Success.wallet_address);
     }
+    return ret.payload.Success;
+  };
+
+  const verifyEmail = async (email: string) => {
+    let ret: any = await api.account.verify_email({ email });
+    setWalletAddress(ret.payload.Success.contract_wallet_addr);
+    setWalletType("eoa");
     return ret.payload.Success;
   };
 
@@ -86,6 +97,7 @@ export const WalletContextProvider = ({ children }: any) => {
         getWalletAddressByEmail,
         createWalletByEmail,
         getEthBalance,
+        verifyEmail
       }}
     >
       {children}

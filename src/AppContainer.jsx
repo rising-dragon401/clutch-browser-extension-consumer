@@ -38,6 +38,7 @@ import KeyStore from "./lib/keystore";
 import WelcomePage from "./pages/Welcome";
 import EmailSendPage from "./pages/EmailSend";
 import { removeLocalStorage } from "./lib/tools";
+import ProtectedRoute from "./routes/ProtectedRoutes";
 
 const Container = styled("div")(({ theme }) => ({
   width: "375px",
@@ -56,63 +57,64 @@ function AppContainer() {
   };
 
   useEffect(() => {
+    removeLocalStorage("clutch-wallet-email");
     loadWalletInfo();
-    // removeLocalStorage("clutch-wallet-jwt");
   }, []);
 
   return (
     <Container>
       <Routes>
-        <Route
-          path="/"
-          element={email != "" ? <HomePage /> : <WelcomePage />}
-        />
+        <Route path="welcome/*" element={<WelcomePage />} />
+        
+        <Route element={<ProtectedRoute email={email} />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/check_assets" element={<CheckAssets />} />
+          <Route path="/security" element={<SecurityPage />} />
+          <Route path="/2fa" element={<TwoFA />} />
+          <Route path="/guardians" element={<Guardians />} />
+          <Route path="/clutch_guardian" element={<ClutchGuardian />} />
+          <Route
+            path="/clutch_guardian_view_details"
+            element={<ClutchGuardianViewDetail />}
+          />
+          <Route path="/friends_and_family" element={<FriendsAndFamily />} />
+          <Route path="/add_guardian" element={<AddGuardian />} />
+          <Route path="/other_guardian" element={<Other />} />
 
-        <Route path="/create_wallet" element={<EmailSendPage />} />
+          <Route path="/2fa_mobile" element={<Mobile />} />
+          <Route path="/2famobile_otp" element={<MobileOTP />} />
 
-        <Route path="/check_assets" element={<CheckAssets />} />
-        <Route path="/security" element={<SecurityPage />} />
-        <Route path="/2fa" element={<TwoFA />} />
-        <Route path="/guardians" element={<Guardians />} />
-        <Route path="/clutch_guardian" element={<ClutchGuardian />} />
-        <Route
-          path="/clutch_guardian_view_details"
-          element={<ClutchGuardianViewDetail />}
-        />
-        <Route path="/friends_and_family" element={<FriendsAndFamily />} />
-        <Route path="/add_guardian" element={<AddGuardian />} />
-        <Route path="/other_guardian" element={<Other />} />
+          <Route path="/2fa_email" element={<Email />} />
+          <Route path="/email_completed" element={<EmailCompleted />} />
+          <Route path="/email_edit" element={<EmailEdit />} />
 
-        <Route path="/2fa_mobile" element={<Mobile />} />
-        <Route path="/2famobile_otp" element={<MobileOTP />} />
+          <Route path="/2fa_google_auth" element={<GoogleAuth />} />
+          <Route path="/google_auth_code" element={<GoogleAuthCode />} />
 
-        <Route path="/2fa_email" element={<Email />} />
-        <Route path="/email_completed" element={<EmailCompleted />} />
-        <Route path="/email_edit" element={<EmailEdit />} />
+          {/* Nft */}
+          <Route path="/nft" element={<Nft />} />
+          <Route path="/nft/:singleNft" element={<SingleNft />} />
+          <Route path="/list" element={<List />} />
+          <Route path="/singleList" element={<SingleList />} />
 
-        <Route path="/2fa_google_auth" element={<GoogleAuth />} />
-        <Route path="/google_auth_code" element={<GoogleAuthCode />} />
+          {/* send pages  */}
+          <Route path="send/*" element={<SendPage />} />
+          <Route path="/send/transaction" element={<Transaction />} />
+          <Route
+            path="/send/transaction_speed"
+            element={<TransactionSpeed />}
+          />
+          <Route path="/send/advance_option" element={<AdvancedOption />} />
+          <Route path="/send_Completed" element={<SendCompleted />} />
 
-        {/* Nft */}
-        <Route path="/nft" element={<Nft />} />
-        <Route path="/nft/:singleNft" element={<SingleNft />} />
-        <Route path="/list" element={<List />} />
-        <Route path="/singleList" element={<SingleList />} />
-
-        {/* send pages  */}
-        <Route path="send/*" element={<SendPage />} />
-        <Route path="/send/transaction" element={<Transaction />} />
-        <Route path="/send/transaction_speed" element={<TransactionSpeed />} />
-        <Route path="/send/advance_option" element={<AdvancedOption />} />
-        <Route path="/send_Completed" element={<SendCompleted />} />
-
-        {/* swap pages  */}
-        <Route path="swap/*" element={<Swap />} />
-        <Route path="/review_swap" element={<ReviewSwap />} />
-        <Route path="/swap/quotes" element={<Quotes />} />
-        <Route path="/swap/inside_quote" element={<InsideQuote />} />
-        {/* <Route path="/check_assets" element={<CheckAssets />} /> */}
-        <Route path="menu/*" element={<Menu />} />
+          {/* swap pages  */}
+          <Route path="swap/*" element={<Swap />} />
+          <Route path="/review_swap" element={<ReviewSwap />} />
+          <Route path="/swap/quotes" element={<Quotes />} />
+          <Route path="/swap/inside_quote" element={<InsideQuote />} />
+          {/* <Route path="/check_assets" element={<CheckAssets />} /> */}
+          <Route path="menu/*" element={<Menu />} />
+        </Route>
       </Routes>
       {email != "" && <Footer />}
     </Container>

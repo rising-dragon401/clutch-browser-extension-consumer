@@ -26,8 +26,7 @@ function Header(props) {
   const [email, setEmail] = useState("");
 
   async function showEmail() {
-    let _email = await keyStore.getEmail();
-    console.log("email", _email);
+    let _email = await keyStore.getEmail();    
     setEmail(_email);
   }
   useEffect(() => {

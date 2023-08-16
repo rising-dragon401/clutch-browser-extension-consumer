@@ -25,6 +25,7 @@ axio.interceptors.response.use((res: any): any => {
 
 const account = {
   create: (params: any) => axio.post("/accounts", params),
+  verify_email: (params: any) => axio.post("/accounts", params),
   getAccountFromEmail: (email: string) => axio.get(`/accounts/${email}`),
 };
 
