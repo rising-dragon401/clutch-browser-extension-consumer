@@ -36,7 +36,6 @@ import List from "./pages/Nft/List";
 import SingleList from "./pages/Nft/SingleList";
 import KeyStore from "./lib/keystore";
 import WelcomePage from "./pages/Welcome";
-import EmailSendPage from "./pages/EmailSend";
 import { removeLocalStorage } from "./lib/tools";
 import ProtectedRoute from "./routes/ProtectedRoutes";
 

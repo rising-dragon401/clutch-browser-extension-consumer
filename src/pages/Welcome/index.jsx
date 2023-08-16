@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import WelcomeLogo from "../../components/WelcomeLogo";
 import StartMenu from "./StartMenu";
-import EmailSendPage from "../EmailSend";
+import EmailSendPage from "./EmailSend";
 
 const Container = styled.div`
   padding: 16px;

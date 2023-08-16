@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { Typography, useTheme } from "@mui/material";
+import { Puff } from "react-loader-spinner";
 
 const BUTTON_SIZE = {
   NORMAL: "normal",
@@ -70,6 +71,7 @@ const Button = (props) => {
     onClick,
     isDisabled,
     justifyContent,
+    isLoading,
   } = props;
   let buttonType = {
     color: theme.palette.text_colors.neutral_0,
@@ -137,11 +139,44 @@ const Button = (props) => {
             alignItems: "center",
           }}
         >
+          {isLoading && (
+            <Puff
+              height="30"
+              width="30"
+              radius={1}
+              color="#fff"
+              ariaLabel="puff-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+          )}
+
           {icon}
           <Label> {label} </Label>
         </div>
       ) : (
-        <Label> {label} </Label>
+        <div
+        style={{
+          display: "flex",
+          justifyContent: justifyContent ? justifyContent : "center",
+          alignItems: "center",
+        }}
+        >
+          {isLoading && (
+            <Puff
+              height="30"
+              width="30"
+              radius={1}
+              color="#fff"
+              ariaLabel="puff-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+          )}
+          <Label> {label} </Label>
+        </div>
       )}
     </ButtonWrapper>
   );

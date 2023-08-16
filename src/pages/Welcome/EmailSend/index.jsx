@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import styled from "@emotion/styled";
-import Button from "../../components/Button";
-import { ReceiveIcon, SendIcon } from "../../components/Svg";
-
+import Button from "../../../components/Button";
 import { useNavigate } from "react-router-dom";
-import Input from "../../components/Input";
-import useWalletContext from "../../context/hooks/useWalletContext";
-import KeyStore from "./../../lib/keystore";
+import Input from "../../../components/Input";
+import useWalletContext from "../../../context/hooks/useWalletContext";
+import KeyStore from "../../../lib/keystore";
 
 const Container = styled.div`
   padding: 16px;
@@ -19,7 +17,7 @@ function EmailSendPage() {
   const [email, setEmail] = useState("");
   const [isSentVerify, setIsSentVerify] = useState(false);  
   const navigate = useNavigate();
-  const { createWalletByEmail, verifyEmail } = useWalletContext();
+  const { createWalletByEmail, verifyEmail, isRequesting } = useWalletContext();
 
   const sendVerificationCode = async () => {
     let ret = await verifyEmail(email);
@@ -55,6 +53,8 @@ function EmailSendPage() {
             variant="primary"
             height="44px"
             label="Send verification code"
+            isLoading={isRequesting}
+            justifyContent="center"
             onClick={() => sendVerificationCode()}
           />
         </Box>
