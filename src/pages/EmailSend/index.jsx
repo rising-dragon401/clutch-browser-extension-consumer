@@ -17,14 +17,16 @@ const keyStore = KeyStore.getInstance();
 
 function EmailSendPage() {
   const [email, setEmail] = useState("");
+  const [isSentVerify, setIsSentVerify] = useState(false);  
   const navigate = useNavigate();
-  const { createWalletByEmail } = useWalletContext();
+  const { createWalletByEmail, verifyEmail } = useWalletContext();
 
-  const createWalletOnClicked = async () => {
-    let ret = await createWalletByEmail(email);
-    keyStore.setJWT(ret.jwt);
-    keyStore.setEmail(email);
-    navigate("/");
+  const sendVerificationCode = async () => {
+    let ret = await verifyEmail(email);
+    setIsSentVerify(true);
+    // keyStore.setJWT(ret.jwt);
+    // keyStore.setEmail(email);
+    // navigate("/");
   };
 
   return (
@@ -52,8 +54,8 @@ function EmailSendPage() {
             size="fullWidth"
             variant="primary"
             height="44px"
-            label="Send Email"
-            onClick={() => createWalletOnClicked()}
+            label="Send verification code"
+            onClick={() => sendVerificationCode()}
           />
         </Box>
       </Container>

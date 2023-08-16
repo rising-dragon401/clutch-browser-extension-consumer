@@ -10,10 +10,11 @@ interface IWalletContext {
   walletType: string;
   walletAddress: string;
   ethBalance: string;
+  isRequesting: boolean;
   getWalletAddressByEmail: (email: string) => Promise<any>;
   getEthBalance: (addr: string) => Promise<string>;
   createWalletByEmail: (email: string) => Promise<any>;
-  verifyEmail: (email:string) => Promise<any>;
+  verifyEmail: (email: string) => Promise<any>;
 }
 
 export const WalletContext = createContext<IWalletContext>({
@@ -22,6 +23,7 @@ export const WalletContext = createContext<IWalletContext>({
   walletAddress: "",
   walletType: "",
   ethBalance: "",
+  isRequesting: false,
   getWalletAddressByEmail: async (email: string) => {
     return "";
   },
@@ -33,7 +35,7 @@ export const WalletContext = createContext<IWalletContext>({
   },
   verifyEmail: async (email: string) => {
     return "";
-  }
+  },
 });
 
 export const WalletContextProvider = ({ children }: any) => {
@@ -41,6 +43,7 @@ export const WalletContextProvider = ({ children }: any) => {
   const [walletAddress, setWalletAddress] = useState<string>("");
   const [walletType, setWalletType] = useState<string>("");
   const [ethBalance, setEthBalance] = useState<string>("0.0");
+  const [isRequesting, setIsRequesting] = useState<boolean>(false);
   const getEthBalance = async (addr: string = "") => {
     if (addr == "" && walletAddress == "") return;
     let address = addr;
@@ -48,31 +51,58 @@ export const WalletContextProvider = ({ children }: any) => {
       address = walletAddress;
     }
 
-    const res = await ethProvider.getBalance(address);
-    setEthBalance(ethers.formatEther(res));
-    return ethers.formatEther(res);
+    try {
+      // setIsRequesting(true);
+      const res = await ethProvider.getBalance(address);
+      setEthBalance(ethers.formatEther(res));
+      return ethers.formatEther(res);
+    } catch (e) {
+      console.log("error: ", e);
+    } finally {
+      // setIsRequesting(false);
+    }
   };
 
   const getWalletAddressByEmail = async (email: string) => {
-    let ret: any = await api.account.getAccountFromEmail(email);
-    if (ret.status == "Success") {
-      setWalletAddress(ret.payload.Success.wallet_address);
+    setIsRequesting(true);
+    try {
+      let ret: any = await api.account.getAccountFromEmail(email);
+      setIsRequesting(true);
+      if (ret.status == "Success") {
+        setWalletAddress(ret.payload.Success.wallet_address);
+      }
+      return ret.payload.Success;
+    } catch (e) {
+      console.log("error: ", e);
+    } finally {
+      setIsRequesting(false);
     }
-    return ret.payload.Success;
   };
 
   const verifyEmail = async (email: string) => {
-    let ret: any = await api.account.verify_email({ email });
-    setWalletAddress(ret.payload.Success.contract_wallet_addr);
-    setWalletType("eoa");
-    return ret.payload.Success;
+    try {
+      setIsRequesting(true);
+      let ret: any = await api.account.verify_email({ email });
+      return ret.payload.Success;
+    } catch (e) {
+      console.log("error ", e);
+    } finally {
+      setIsRequesting(false);
+    }
   };
 
   const createWalletByEmail = async (email: string) => {
-    let ret: any = await api.account.create({ email });
-    setWalletAddress(ret.payload.Success.contract_wallet_addr);
-    setWalletType("eoa");
-    return ret.payload.Success;
+    try {
+      setIsRequesting(true);
+      let ret: any = await api.account.create({ email });
+      setWalletAddress(ret.payload.Success.contract_wallet_addr);
+      setWalletType("eoa");
+      return ret.payload.Success;
+    } catch (e) {
+      console.log("error ", e);
+    } finally {
+      setIsRequesting(false);
+    }
   };
 
   useEffect(() => {
@@ -94,10 +124,11 @@ export const WalletContextProvider = ({ children }: any) => {
         walletType,
         walletAddress,
         ethBalance,
+        isRequesting,
         getWalletAddressByEmail,
         createWalletByEmail,
         getEthBalance,
-        verifyEmail
+        verifyEmail,
       }}
     >
       {children}
