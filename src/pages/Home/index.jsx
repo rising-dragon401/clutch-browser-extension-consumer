@@ -14,7 +14,7 @@ import TokenInfoItem from "../../components/TokenInfoItem";
 
 import EthIcon from "../../assets/tokens/eth.svg";
 import { removeLocalStorage } from "../../lib/tools";
-import { assetsList } from "../../config/local";
+// import { assetsList } from "../../config/local";
 const Container = styled.div`
   padding: 16px;
 `;
@@ -45,7 +45,7 @@ function HomePage() {
   useEffect(() => {
     getWallet();
 
-    console.log(assetsList, "assetsList");
+    // console.log(assetsList, "assetsList");
     // async function callRemoveLocalStorage() {
     //   await removeLocalStorage("clutch-wallet-email");
     // }

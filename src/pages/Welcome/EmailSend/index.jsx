@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Input from "../../../components/Input";
 import useWalletContext from "../../../context/hooks/useWalletContext";
 import KeyStore from "../../../lib/keystore";
-
+import InputBtn from "@src/components/InputBtn";
 const Container = styled.div`
   padding: 16px;
 `;
@@ -15,13 +15,18 @@ const keyStore = KeyStore.getInstance();
 
 function EmailSendPage() {
   const [email, setEmail] = useState("");
-  const [isSentVerify, setIsSentVerify] = useState(false);  
+  const [verifyCode, setVerifyCode] = useState("");
+  const [isSentVerify, setIsSentVerify] = useState(false);
   const navigate = useNavigate();
   const { createWalletByEmail, verifyEmail, isRequesting } = useWalletContext();
 
   const sendVerificationCode = async () => {
     let ret = await verifyEmail(email);
     setIsSentVerify(true);
+  };
+
+  const checkVerifyCodeAndCreate = async () => {
+    createWalletByEmail(email, v);
     // keyStore.setJWT(ret.jwt);
     // keyStore.setEmail(email);
     // navigate("/");
@@ -48,15 +53,28 @@ function EmailSendPage() {
               setEmail(e.target.value);
             }}
           />
-          <Button
-            size="fullWidth"
-            variant="primary"
-            height="44px"
-            label="Send verification code"
-            isLoading={isRequesting}
-            justifyContent="center"
-            onClick={() => sendVerificationCode()}
-          />
+
+          {isSentVerify == true ? (
+            <InputBtn
+              placeholder="Input code"
+              label="Resend"
+              value={verifyCode}
+              onChange={(e) => {
+                setVerifyCode(e.target.value);
+              }}
+              onClick={() => checkVerifyCodeAndCreate()}
+            />
+          ) : (
+            <Button
+              size="fullWidth"
+              variant="primary"
+              height="44px"
+              label="Send verification code"
+              isLoading={isRequesting}
+              justifyContent="center"
+              onClick={() => sendVerificationCode()}
+            />
+          )}
         </Box>
       </Container>
     </Box>

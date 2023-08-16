@@ -13,7 +13,7 @@ interface IWalletContext {
   isRequesting: boolean;
   getWalletAddressByEmail: (email: string) => Promise<any>;
   getEthBalance: (addr: string) => Promise<string>;
-  createWalletByEmail: (email: string) => Promise<any>;
+  createWalletByEmail: (email: string, code: string) => Promise<any>;
   verifyEmail: (email: string) => Promise<any>;
 }
 
@@ -30,7 +30,7 @@ export const WalletContext = createContext<IWalletContext>({
   getEthBalance: async (addr: string) => {
     return "";
   },
-  createWalletByEmail: async (email: string) => {
+  createWalletByEmail: async (email: string, code: string) => {
     return "";
   },
   verifyEmail: async (email: string) => {
@@ -91,10 +91,10 @@ export const WalletContextProvider = ({ children }: any) => {
     }
   };
 
-  const createWalletByEmail = async (email: string) => {
+  const createWalletByEmail = async (email: string, code: string) => {
     try {
       setIsRequesting(true);
-      let ret: any = await api.account.create({ email });
+      let ret: any = await api.account.create({ email, code });
       setWalletAddress(ret.payload.Success.contract_wallet_addr);
       setWalletType("eoa");
       return ret.payload.Success;

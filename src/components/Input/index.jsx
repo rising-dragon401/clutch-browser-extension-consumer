@@ -24,9 +24,9 @@ const InputField = styled.input`
   }
 `;
 
-function Input({ placeholder, value, onChange }) {
+function Input({ placeholder, value, onChange, width = "100%" }) {
   return (
-    <Box sx={{width: "100%"}}>
+    <Box sx={{width: width}}>
       <InputField
         placeholder={placeholder}
         value={value}
