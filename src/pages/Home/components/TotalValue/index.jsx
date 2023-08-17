@@ -2,10 +2,12 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material";
 import { DivFlex } from "../../../../components";
+import useWalletContext from "../../../../context/hooks/useWalletContext";
 
 function TotalValue() {
   const theme = useTheme();
-
+  const { ethBalance, ethPrice } =
+    useWalletContext();
   return (
     <Box
       sx={{
@@ -30,7 +32,7 @@ function TotalValue() {
         }}
       >
         <Box>
-          <Typography variant="h2"> $ 0.0 </Typography>
+          <Typography variant="h2"> $ {parseFloat(ethBalance) * parseFloat(ethPrice)} </Typography>
         </Box>
         <Box>
           <Box>

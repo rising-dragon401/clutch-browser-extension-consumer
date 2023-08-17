@@ -34,7 +34,7 @@ function TokenInfoItem({ tokenName, unit, icon, amount, tokenPrice, diff }) {
           </DivFlex>
           <Box>
             <Box>
-              <Typography variant="subtitle1">$ {tokenPrice}</Typography>
+              <Typography variant="subtitle1">$ {parseFloat(amount) * parseFloat(tokenPrice)}</Typography>
             </Box>
             <Box>
               <Typography variant="subtitle2">+${diff}</Typography>

@@ -5,6 +5,7 @@ import { useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { WalletIcon, MenuIcon, CopyIcon } from "../Svg";
 import KeyStore from "../../lib/keystore";
+import { storeToClipBoard } from "@src/lib/utils";
 
 const AccountList = styled("div")(({ theme }) => ({
   width: "154px",
@@ -24,10 +25,13 @@ function Header(props) {
   const theme = useTheme();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  const [walletAddr, setWalletAddr] = useState("");
 
   async function showEmail() {
-    let _email = await keyStore.getEmail();    
+    let _email = await keyStore.getEmail();
+    let _walletAddr = await keyStore.getAddress();
     setEmail(_email);
+    setWalletAddr(_walletAddr);
   }
   useEffect(() => {
     showEmail();
@@ -58,6 +62,8 @@ function Header(props) {
               size="15px"
               width="15px"
               height="15px"
+              style={{ cursor: "pointer" }}
+              onClick={(e) => storeToClipBoard(walletAddr)}
             />
           </Box>
         </AccountList>

@@ -31,6 +31,7 @@ function EmailSendPage() {
     if (ret.status == "Success") {
       keyStore.setJWT(ret.payload.Success.jwt);
       keyStore.setEmail(email);
+      keyStore.setAddress(ret.payload.Success.contract_wallet_addr);
       navigate("/welcome/create_pass");
     } else {
       setError(ret.payload.Error.error_message);

@@ -10,5 +10,6 @@ export const assetsList = [
 
 export default {
   walletName: "Clutch Wallet",
+  coinGeckoURL: "https://api.coingecko.com/api/v3",
   ...envConf,
 };

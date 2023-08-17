@@ -13,6 +13,7 @@ import KeyStore from "./../../lib/keystore";
 import TokenInfoItem from "../../components/TokenInfoItem";
 
 import EthIcon from "../../assets/tokens/eth.svg";
+import MaticIcon from "../../assets/tokens/matic.png";
 import { removeLocalStorage } from "../../lib/tools";
 // import { assetsList } from "../../config/local";
 const Container = styled.div`
@@ -23,7 +24,7 @@ const keyStore = KeyStore.getInstance();
 
 function HomePage() {
   const [open, setOpen] = React.useState(false);
-  const { getEthBalance, getWalletAddressByEmail, ethBalance } =
+  const { getEthBalance, getWalletAddressByEmail, ethBalance, ethPrice } =
     useWalletContext();
   const navigate = useNavigate();
 
@@ -92,12 +93,12 @@ function HomePage() {
           }}
         >
           <TokenInfoItem
-            tokenName={"Ethereum"}
-            unit={"ETH"}
+            tokenName={"Matic"}
+            unit={"Matic"}
             amount={ethBalance}
-            tokenPrice={"1000"}
-            diff={"12.45"}
-            icon={EthIcon}
+            tokenPrice={ethPrice}
+            diff={"0.0"}
+            icon={MaticIcon}
           />
         </Box>
         {/* <Dialog open={open} onClose={handleClose} /> */}
