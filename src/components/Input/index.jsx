@@ -24,7 +24,7 @@ const InputField = styled.input`
   }
 `;
 
-function Input({ placeholder, value, onChange, width = "100%" }) {
+function Input({ placeholder, value, onChange, width = "100%", ...props }) {
   return (
     <Box sx={{width: width}}>
       <InputField
@@ -33,6 +33,7 @@ function Input({ placeholder, value, onChange, width = "100%" }) {
         onChange={(e) => {
           onChange(e);
         }}
+        {...props}
       />
     </Box>
   );

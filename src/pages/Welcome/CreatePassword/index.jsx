@@ -42,13 +42,14 @@ export default function CreatePassword() {
         <Typography variant="body1" sx={{ marginBottom: "-8px" }}>
           New password
         </Typography>
-        <Input value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Input value={password} onChange={(e) => setPassword(e.target.value)} type="password" />
         <Typography variant="body1" sx={{ marginBottom: "-8px" }}>
           Confirm password
         </Typography>
         <Input
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
+          type="password"
         />
 
         <Button
@@ -56,7 +57,7 @@ export default function CreatePassword() {
           variant="primary"
           height="44px"
           label="Create"
-          justifyContent="center"
+          justifyContent="center"          
           onClick={() => createPassword()}
         />
 

@@ -79,6 +79,10 @@ const Button = (props) => {
     border: "none",
     svgColor: theme.palette.text_colors.neutral_0,
   };
+
+  let loaderStyle = {
+    color: "#fff"
+  };
   if (isDisabled) {
     buttonType = {
       color: theme.button.primary,
@@ -92,6 +96,9 @@ const Button = (props) => {
       border: `1.56px solid ${theme.palette.key_colors.primary_475}`,
       svgColor: theme.palette.text_colors.primary_550,
     };
+    loaderStyle = {
+      color: theme.palette.key_colors.primary_475
+    }
   } else if (variant === BUTTON_TYPE.DISABLE) {
     buttonType = {
       color: theme.palette.key_colors_interactions.primary_pressed_550,
@@ -144,7 +151,7 @@ const Button = (props) => {
               height="30"
               width="30"
               radius={1}
-              color="#fff"
+              color={loaderStyle.color}
               ariaLabel="puff-loading"
               wrapperStyle={{}}
               wrapperClass=""
@@ -168,7 +175,7 @@ const Button = (props) => {
               height="30"
               width="30"
               radius={1}
-              color="#fff"
+              color={loaderStyle.color}
               ariaLabel="puff-loading"
               wrapperStyle={{}}
               wrapperClass=""

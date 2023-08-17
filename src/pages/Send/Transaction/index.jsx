@@ -15,6 +15,9 @@ import styled from "@emotion/styled";
 import DialogPopup from "../../../components/DialogPopup";
 import useWalletContext from "../../../context/hooks/useWalletContext";
 import api from "../../../lib/api";
+import KeyStore from "../../../lib/keystore";
+
+const keyStore = KeyStore.getInstance();
 
 const DetailBox = styled.div`
   background: ${({ theme }) => theme.palette.text_colors.neutral_0};
@@ -62,9 +65,10 @@ function Transaction() {
   const handleProceed = async () => {
     try {
       setIsLoading(true);
+      let addr = await keyStore.getAddress();            
       let ret = await api.transaction.sendETH({
         to: receiver,
-        from: walletAddress,
+        from: addr,
         value: amount,
       });
       console.log(ret, "ret");
@@ -315,6 +319,7 @@ function Transaction() {
           size="normal"
           variant="secondary"
           label="Send"
+          isLoading={isLoading}
           style={{ marginBottom: "9px" }}
           onClick={() => handleProceed()}
         />
