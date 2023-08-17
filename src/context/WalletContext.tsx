@@ -103,7 +103,7 @@ export const WalletContextProvider = ({ children }: any) => {
         return ret;
       }
     } catch (e) {
-      console.log("error ", e);
+      console.log("error ", e);      
     } finally {
       setIsRequesting(false);
     }

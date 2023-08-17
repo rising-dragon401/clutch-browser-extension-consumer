@@ -65,6 +65,22 @@ export default class KeyStore {
     return val;
   }
 
+  public async setPassword(password: string) {
+    try {
+      await setLocalStorage("clutch-wallet-password", password);
+    } catch (e) {
+      console.log("Error on setPassword function:", e);
+    }
+  }
+
+  public async getPassword() {
+    let val: string = await getLocalStorage("clutch-wallet-password");
+    if (val == undefined) {
+      return "";
+    }
+    return val;
+  }
+
   /**
    * create a new keystore and delete the old
    * @param password

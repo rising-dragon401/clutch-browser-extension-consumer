@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import HomePage from "./pages/Home/index";
 import { styled } from "@mui/material/styles";
 import { useTheme } from "@mui/material";
@@ -49,14 +49,21 @@ const keyStore = KeyStore.getInstance();
 
 function AppContainer() {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [email, setEmail] = useState();
   const loadWalletInfo = async () => {
-    let _email = await keyStore.getEmail();
+    let _email = await keyStore.getEmail();    
+    console.log("=================", email);
     setEmail(_email);
+    if(_email) {
+      navigate("/home");
+    } else {
+      navigate("/welcome");
+    }
   };
 
   useEffect(() => {
-    removeLocalStorage("clutch-wallet-email");
+    // removeLocalStorage("clutch-wallet-email");
     loadWalletInfo();
   }, []);
 
@@ -66,7 +73,8 @@ function AppContainer() {
         <Route path="welcome/*" element={<WelcomePage />} />
         
         <Route element={<ProtectedRoute email={email} />}>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<AppContainer />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/check_assets" element={<CheckAssets />} />
           <Route path="/security" element={<SecurityPage />} />
           <Route path="/2fa" element={<TwoFA />} />
@@ -115,7 +123,7 @@ function AppContainer() {
           <Route path="menu/*" element={<Menu />} />
         </Route>
       </Routes>
-      {email != "" && <Footer />}
+      {/* {email != "" && <Footer />} */}
     </Container>
   );
 }

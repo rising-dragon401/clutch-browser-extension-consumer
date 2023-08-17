@@ -19,7 +19,7 @@ function EmailSendPage() {
   const [isSentVerify, setIsSentVerify] = useState(false);
   const { createWalletByEmail, verifyEmail, isRequesting } = useWalletContext();
   const [error, setError] = useState("");
-
+  const navigate = useNavigate();
   const sendVerificationCode = async () => {
     let ret = await verifyEmail(email);
     setIsSentVerify(true);
@@ -27,13 +27,14 @@ function EmailSendPage() {
 
   const checkVerifyCodeAndCreate = async () => {
     let ret = await createWalletByEmail(email, verifyCode);
-    if(ret.status == "success") {
+
+    if (ret.status == "Success") {
       keyStore.setJWT(ret.payload.Success.jwt);
       keyStore.setEmail(email);
+      navigate("/welcome/create_pass");
     } else {
       setError(ret.payload.Error.error_message);
     }
-    // navigate("/");
   };
 
   return (
@@ -86,12 +87,12 @@ function EmailSendPage() {
             variant="primary"
             height="44px"
             label="Conintue"
-            style={{marginTop: "16px"}}
+            style={{ marginTop: "16px" }}
             onClick={() => checkVerifyCodeAndCreate()}
           />
         )}
 
-        {error && <p>{error}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
       </Container>
     </Box>
   );
