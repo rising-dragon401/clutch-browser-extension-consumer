@@ -74,9 +74,9 @@ export const WalletContextProvider = ({ children }: any) => {
   const getWalletAddressByEmail = async (email: string) => {
     setIsRequesting(true);
     try {
-      let ret: any = await api.account.getAccountFromEmail(email);
+      let ret: any = await api.account.getAccountFromEmail(email);      
       setIsRequesting(true);
-      if (ret.status == "Success") {
+      if (ret.status == "Success") {        
         setWalletAddress(ret.payload.Success.wallet_address);
       }
       return ret.payload.Success;

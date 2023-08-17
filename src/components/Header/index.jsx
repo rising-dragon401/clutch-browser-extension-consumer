@@ -6,7 +6,7 @@ import { styled } from "@mui/material/styles";
 import { WalletIcon, MenuIcon, CopyIcon } from "../Svg";
 import KeyStore from "../../lib/keystore";
 import { storeToClipBoard } from "@src/lib/utils";
-
+import useWalletContext from "../../context/hooks/useWalletContext";
 const AccountList = styled("div")(({ theme }) => ({
   width: "154px",
   height: "32px",
@@ -25,13 +25,13 @@ function Header(props) {
   const theme = useTheme();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [walletAddr, setWalletAddr] = useState("");
+  const { walletAddress } = useWalletContext();
 
   async function showEmail() {
     let _email = await keyStore.getEmail();
-    let _walletAddr = await keyStore.getAddress();
     setEmail(_email);
-    setWalletAddr(_walletAddr);
+    // let _walletAddr = await keyStore.getAddress();
+    // setWalletAddr(_walletAddr);
   }
   useEffect(() => {
     showEmail();
@@ -63,7 +63,7 @@ function Header(props) {
               width="15px"
               height="15px"
               style={{ cursor: "pointer" }}
-              onClick={(e) => storeToClipBoard(walletAddr)}
+              onClick={(e) => storeToClipBoard(walletAddress)}
             />
           </Box>
         </AccountList>

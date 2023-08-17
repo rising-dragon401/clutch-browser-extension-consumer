@@ -6,6 +6,7 @@ import Button from "../../components/Button";
 import Input from "../../components/Input";
 import { DivFlex } from "../../components";
 import { EthIcon, ChevronDownIcon } from "../../components/Svg";
+import MaticIcon from "@src/assets/tokens/matic.png";
 
 const InputField = styled.div`
   flex-basis: 50%;
@@ -71,8 +72,8 @@ function SendPage() {
               <Input placeholder="Amount" />
             </InputField>
             <SelectToken onClick={() => navigate("/check_assets")}>
-              <EthIcon />
-              <Typography variant="body1"> ETH </Typography>
+              <img src={MaticIcon} style={{ width: "30px" }} />
+              <Typography variant="body1"> Matic </Typography>
               <ChevronDownIcon />
             </SelectToken>
             {/* <SelectContainer>

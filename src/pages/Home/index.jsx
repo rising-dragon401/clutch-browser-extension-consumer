@@ -37,7 +37,7 @@ function HomePage() {
   };
 
   const getWallet = async () => {
-    let email = keyStore.getEmail();
+    let email = await keyStore.getEmail();
     if (email != "") {
       await getWalletAddressByEmail(email);
       await getEthBalance();
