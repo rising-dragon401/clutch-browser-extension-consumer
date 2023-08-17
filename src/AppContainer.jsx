@@ -53,19 +53,12 @@ function AppContainer() {
   const [email, setEmail] = useState();
   const [loading, setLoading] = useState(true);
   const loadWalletInfo = async () => {
-    let _email = await keyStore.getEmail();
-    console.log("=================", email);
-    setEmail(_email);
-    // if (_email) {
-    //   navigate("/home");
-    // } else {
-    //   navigate("/welcome");
-    // }
+    let _email = await keyStore.getEmail();    
+    setEmail(_email);    
     setLoading(false);
   };
 
-  useEffect(() => {
-    console.log("called=====");
+  useEffect(() => {    
     // removeLocalStorage("clutch-wallet-email");
     loadWalletInfo();
   }, []);

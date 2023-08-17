@@ -49,7 +49,7 @@ function Header(props) {
       </Box>
       <Box>
         <AccountList>
-          <Box>-</Box>
+          <Box></Box>
           <Box>{email}</Box>
           <Box>
             <CopyIcon
