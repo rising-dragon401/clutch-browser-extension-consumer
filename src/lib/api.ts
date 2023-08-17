@@ -29,6 +29,10 @@ const account = {
   getAccountFromEmail: (email: string) => axio.get(`/accounts/${email}`),
 };
 
+const transaction = {
+  sendETH: (params: any) => axio.post("/transaction", params),
+};
 export default {
   account,
+  transaction
 };

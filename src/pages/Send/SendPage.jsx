@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import styled from "@emotion/styled";
@@ -48,7 +48,16 @@ const SelectToken = styled.div`
 
 function SendPage() {
   const navigate = useNavigate();
-
+  const [amount, setAmount] = useState("");
+  const [receiver, setReceiver] = useState("");
+  const [error, setError] = useState("");
+  const onClickSend = () => {
+    if (receiver && amount) {
+      navigate("/send/transaction", { state: { receiver, amount } });
+    } else {
+      setError("Please input the receiver address and amount");
+    }
+  };
   return (
     <>
       <Box
@@ -65,11 +74,19 @@ function SendPage() {
             Recepient’s address
           </Typography>
           <InputField>
-            <Input placeholder="Search public address, or ENS" />
+            <Input
+              placeholder="Search public address, or ENS"
+              value={receiver}
+              onChange={(e) => setReceiver(e.target.value)}
+            />
           </InputField>
           <DivFlex justifyContent="space-between" gap="16px" marginTop="32px">
             <InputField>
-              <Input placeholder="Amount" />
+              <Input
+                placeholder="Amount"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
             </InputField>
             <SelectToken onClick={() => navigate("/check_assets")}>
               <img src={MaticIcon} style={{ width: "30px" }} />
@@ -88,7 +105,7 @@ function SendPage() {
             </SelectContainer> */}
           </DivFlex>
         </Box>
-
+        {error && <p style={{ color: "red" }}>{error}</p>}
         <Button
           size="fullWidth"
           variant="secondary"
@@ -98,7 +115,7 @@ function SendPage() {
             // fontSize: "14px",
             // color: theme.palette.text_colors.primary_475,
           }}
-          onClick={() => navigate("/send/transaction")}
+          onClick={() => onClickSend()}
         />
       </Box>
     </>

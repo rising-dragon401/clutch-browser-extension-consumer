@@ -1,12 +1,13 @@
 import React from "react";
 import { useTheme } from "@mui/material";
 import { Box, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import CompletedCheck from "../../components/Svg/Icons/CompletedCheck";
 import Button from "../../components/Button";
 import Header from "../../components/Header";
 import ReloadIcon from "../../components/Svg/Icons/Reload";
 import styled from "@emotion/styled";
+import useWalletContext from "../../context/hooks/useWalletContext";
 
 const ReloadIconText = styled.div`
   display: flex;
@@ -49,7 +50,10 @@ const NewTransctionText = styled.div`
 `;
 
 const SendCompleted = () => {
+  const location = useLocation();
   const theme = useTheme();
+  const { amount } = location.state;
+  const { ethPrice } = useWalletContext();
   return (
     <>
       <Header page="homepage" />
@@ -74,7 +78,7 @@ const SendCompleted = () => {
         </Box>
         <YouSentText>You sent</YouSentText>
 
-        <Title> 1 ETH ($2,586.70) </Title>
+        <Title> {amount} MATIC (${(parseFloat(amount) * parseFloat(ethPrice)).toPrecision(4)}) </Title>
 
         <ReloadIconText>
           <ReloadIcon

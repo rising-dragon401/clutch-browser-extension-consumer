@@ -9,10 +9,12 @@ import {
   EthIcon,
 } from "../../../components/Svg";
 import { useTheme } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { DivFlex } from "../../../components";
 import styled from "@emotion/styled";
 import DialogPopup from "../../../components/DialogPopup";
+import useWalletContext from "../../../context/hooks/useWalletContext";
+import api from "../../../lib/api";
 
 const DetailBox = styled.div`
   background: ${({ theme }) => theme.palette.text_colors.neutral_0};
@@ -39,13 +41,17 @@ const BoldText675 = styled.p`
 `;
 
 function Transaction() {
+  const location = useLocation();
   const theme = useTheme();
   const navigate = useNavigate();
+
+  const { receiver, amount } = location.state;
   const [openTotalPopup, setOpenTotalPopup] = useState(false);
   const [openEstimatedPopup, setOpenEstimatePopup] = useState(false);
   const [openTransactionPopup, setOpenTransactionPopup] = useState(false);
   const [openClutchPopup, setOpenClutchPopup] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const { walletAddress } = useWalletContext();
   const handleClose = () => {
     setOpenTotalPopup(false);
     setOpenEstimatePopup(false);
@@ -53,8 +59,23 @@ function Transaction() {
     setOpenClutchPopup(false);
   };
 
-  const handleProceed = () => {
-    navigate("/");
+  const handleProceed = async () => {
+    try {
+      setIsLoading(true);
+      let ret = await api.transaction.sendETH({
+        to: receiver,
+        from: walletAddress,
+        value: amount,
+      });
+      console.log(ret, "ret");
+      if (ret.payload.Success.status == "Success") {
+        navigate("/send_Completed", {state: {amount}});
+      }
+    } catch (e) {
+      console.log("error ", e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -126,7 +147,7 @@ function Transaction() {
                   fontFamily: "Lato",
                 }}
               >
-                dariadombrovska.eth
+                {receiver.slice(0, 6)}...{receiver.slice(-4)}
               </Typography>
 
               {/* text + icon */}
@@ -150,7 +171,7 @@ function Transaction() {
                     color: theme.palette.text_colors.neutral_800,
                   }}
                 >
-                  0.028 ETH
+                  {amount} ETH
                 </Typography>
               </Box>
               {/* right bottom text */}
@@ -161,7 +182,7 @@ function Transaction() {
                   textAlign: "right",
                 }}
               >
-                450.01 USD
+                0.01 USD
               </Typography>
             </Box>
           </DetailBox>
@@ -253,7 +274,7 @@ function Transaction() {
                   marginBottom: "10px",
                 }}
               >
-                0.0031 ETH $4.52
+                0.031 MATIC $0.019
               </BoldText675>
 
               <Box
@@ -293,9 +314,9 @@ function Transaction() {
         <Button
           size="normal"
           variant="secondary"
-          label="Save"
+          label="Send"
           style={{ marginBottom: "9px" }}
-          onClick={() => navigate("/send_Completed")}
+          onClick={() => handleProceed()}
         />
       </DivFlex>
 
