@@ -17,7 +17,7 @@ export default function CreatePassword() {
   const createPassword = () => {
     if (password == confirmPassword) {
       keyStore.setPassword(password);
-      navigate("/");
+      navigate("/home");
     } else {
       setError("Confirm password does not match password");
     }

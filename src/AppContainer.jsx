@@ -51,18 +51,21 @@ function AppContainer() {
   const theme = useTheme();
   const navigate = useNavigate();
   const [email, setEmail] = useState();
+  const [loading, setLoading] = useState(true);
   const loadWalletInfo = async () => {
-    let _email = await keyStore.getEmail();    
+    let _email = await keyStore.getEmail();
     console.log("=================", email);
     setEmail(_email);
-    if(_email) {
-      navigate("/home");
-    } else {
-      navigate("/welcome");
-    }
+    // if (_email) {
+    //   navigate("/home");
+    // } else {
+    //   navigate("/welcome");
+    // }
+    setLoading(false);
   };
 
   useEffect(() => {
+    console.log("called=====");
     // removeLocalStorage("clutch-wallet-email");
     loadWalletInfo();
   }, []);
@@ -71,57 +74,54 @@ function AppContainer() {
     <Container>
       <Routes>
         <Route path="welcome/*" element={<WelcomePage />} />
-        
-        <Route element={<ProtectedRoute email={email} />}>
-          <Route path="/" element={<AppContainer />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/check_assets" element={<CheckAssets />} />
-          <Route path="/security" element={<SecurityPage />} />
-          <Route path="/2fa" element={<TwoFA />} />
-          <Route path="/guardians" element={<Guardians />} />
-          <Route path="/clutch_guardian" element={<ClutchGuardian />} />
-          <Route
-            path="/clutch_guardian_view_details"
-            element={<ClutchGuardianViewDetail />}
-          />
-          <Route path="/friends_and_family" element={<FriendsAndFamily />} />
-          <Route path="/add_guardian" element={<AddGuardian />} />
-          <Route path="/other_guardian" element={<Other />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/check_assets" element={<CheckAssets />} />
+        <Route path="/security" element={<SecurityPage />} />
+        <Route path="/2fa" element={<TwoFA />} />
+        <Route path="/guardians" element={<Guardians />} />
+        <Route path="/clutch_guardian" element={<ClutchGuardian />} />
+        <Route
+          path="/clutch_guardian_view_details"
+          element={<ClutchGuardianViewDetail />}
+        />
+        <Route path="/friends_and_family" element={<FriendsAndFamily />} />
+        <Route path="/add_guardian" element={<AddGuardian />} />
+        <Route path="/other_guardian" element={<Other />} />
 
-          <Route path="/2fa_mobile" element={<Mobile />} />
-          <Route path="/2famobile_otp" element={<MobileOTP />} />
+        <Route path="/2fa_mobile" element={<Mobile />} />
+        <Route path="/2famobile_otp" element={<MobileOTP />} />
 
-          <Route path="/2fa_email" element={<Email />} />
-          <Route path="/email_completed" element={<EmailCompleted />} />
-          <Route path="/email_edit" element={<EmailEdit />} />
+        <Route path="/2fa_email" element={<Email />} />
+        <Route path="/email_completed" element={<EmailCompleted />} />
+        <Route path="/email_edit" element={<EmailEdit />} />
 
-          <Route path="/2fa_google_auth" element={<GoogleAuth />} />
-          <Route path="/google_auth_code" element={<GoogleAuthCode />} />
+        <Route path="/2fa_google_auth" element={<GoogleAuth />} />
+        <Route path="/google_auth_code" element={<GoogleAuthCode />} />
 
-          {/* Nft */}
-          <Route path="/nft" element={<Nft />} />
-          <Route path="/nft/:singleNft" element={<SingleNft />} />
-          <Route path="/list" element={<List />} />
-          <Route path="/singleList" element={<SingleList />} />
+        {/* Nft */}
+        <Route path="/nft" element={<Nft />} />
+        <Route path="/nft/:singleNft" element={<SingleNft />} />
+        <Route path="/list" element={<List />} />
+        <Route path="/singleList" element={<SingleList />} />
 
-          {/* send pages  */}
-          <Route path="send/*" element={<SendPage />} />
-          <Route path="/send/transaction" element={<Transaction />} />
-          <Route
-            path="/send/transaction_speed"
-            element={<TransactionSpeed />}
-          />
-          <Route path="/send/advance_option" element={<AdvancedOption />} />
-          <Route path="/send_Completed" element={<SendCompleted />} />
+        {/* send pages  */}
+        <Route path="send/*" element={<SendPage />} />
+        <Route path="/send/transaction" element={<Transaction />} />
+        <Route path="/send/transaction_speed" element={<TransactionSpeed />} />
+        <Route path="/send/advance_option" element={<AdvancedOption />} />
+        <Route path="/send_Completed" element={<SendCompleted />} />
 
-          {/* swap pages  */}
-          <Route path="swap/*" element={<Swap />} />
-          <Route path="/review_swap" element={<ReviewSwap />} />
-          <Route path="/swap/quotes" element={<Quotes />} />
-          <Route path="/swap/inside_quote" element={<InsideQuote />} />
-          {/* <Route path="/check_assets" element={<CheckAssets />} /> */}
-          <Route path="menu/*" element={<Menu />} />
-        </Route>
+        {/* swap pages  */}
+        <Route path="swap/*" element={<Swap />} />
+        <Route path="/review_swap" element={<ReviewSwap />} />
+        <Route path="/swap/quotes" element={<Quotes />} />
+        <Route path="/swap/inside_quote" element={<InsideQuote />} />
+        {/* <Route path="/check_assets" element={<CheckAssets />} /> */}
+        <Route path="menu/*" element={<Menu />} />
+
+        {!loading && (
+          <Route path="*" element={email ? <HomePage /> : <WelcomePage />} />
+        )}
       </Routes>
       {/* {email != "" && <Footer />} */}
     </Container>
