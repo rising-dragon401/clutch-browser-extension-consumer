@@ -88,6 +88,7 @@ function EmailSendPage() {
             variant="primary"
             height="44px"
             label="Conintue"
+            isLoading={isRequesting}
             style={{ marginTop: "16px" }}
             onClick={() => checkVerifyCodeAndCreate()}
           />
