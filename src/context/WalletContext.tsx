@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import config from "../config";
 import api from "../lib/api";
 import coingecko from "@src/lib/coingecko";
+import ERC20Token from "@src/abi/ERC20.json";
 
 const ethProvider = new ethers.JsonRpcProvider(config.rpcProvider);
 interface IWalletContext {
@@ -13,6 +14,7 @@ interface IWalletContext {
   ethBalance: string;
   ethPrice: string;
   isRequesting: boolean;
+  usdcBalance: string;
   getWalletAddressByEmail: (email: string) => Promise<any>;
   getEthBalance: (addr: string) => Promise<string>;
   createWalletByEmail: (email: string, code: string) => Promise<any>;
@@ -26,8 +28,9 @@ export const WalletContext = createContext<IWalletContext>({
   walletAddress: "",
   walletType: "",
   ethBalance: "",
-  ethPrice:"",
+  ethPrice: "",
   isRequesting: false,
+  usdcBalance:"",
   getWalletAddressByEmail: async (email: string) => {
     return "";
   },
@@ -40,9 +43,9 @@ export const WalletContext = createContext<IWalletContext>({
   verifyEmail: async (email: string) => {
     return "";
   },
-  getPrice: async(coinId: string) => {
+  getPrice: async (coinId: string) => {
     return "";
-  }
+  },
 });
 
 export const WalletContextProvider = ({ children }: any) => {
@@ -52,6 +55,7 @@ export const WalletContextProvider = ({ children }: any) => {
   const [ethBalance, setEthBalance] = useState<string>("0.0");
   const [ethPrice, setEthPrice] = useState<string>("0.0");
   const [isRequesting, setIsRequesting] = useState<boolean>(false);
+  const [usdcBalance, setUSDCBalance] = useState<string>("0.0");
   const getEthBalance = async (addr: string = "") => {
     if (addr == "" && walletAddress == "") return;
     let address = addr;
@@ -71,12 +75,34 @@ export const WalletContextProvider = ({ children }: any) => {
     }
   };
 
+  const getUSDCBalance = async (addr: string = "") => {
+    if (addr == "" && walletAddress == "") return;
+    let address = addr;
+    if (address == "") {
+      address = walletAddress;
+    }
+
+    try {
+      const usdcContract = new ethers.Contract(
+        "0xe6b8a5CF854791412c1f6EFC7CAf629f5Df1c747",
+        ERC20Token,
+        ethProvider
+      );
+      const usdcAmount = await usdcContract.balanceOf(walletAddress);
+      setUSDCBalance(ethers.formatUnits(usdcAmount, 6));
+      return ethers.formatUnits(usdcAmount, 6);
+    } catch (e) {
+      console.log("error: ", e);
+    } finally {
+    }
+  };
+
   const getWalletAddressByEmail = async (email: string) => {
     setIsRequesting(true);
     try {
-      let ret: any = await api.account.getAccountFromEmail(email);      
+      let ret: any = await api.account.getAccountFromEmail(email);
       setIsRequesting(true);
-      if (ret.status == "Success") {        
+      if (ret.status == "Success") {
         setWalletAddress(ret.payload.Success.wallet_address);
       }
       return ret.payload.Success;
@@ -103,7 +129,7 @@ export const WalletContextProvider = ({ children }: any) => {
     try {
       setIsRequesting(true);
       let ret: any = await api.account.create({ email, code });
-      if(ret.status == "success") {
+      if (ret.status == "success") {
         setWalletAddress(ret.payload.Success.contract_wallet_addr);
         setWalletType("eoa");
         return ret;
@@ -111,29 +137,29 @@ export const WalletContextProvider = ({ children }: any) => {
         return ret;
       }
     } catch (e) {
-      console.log("error ", e);      
+      console.log("error ", e);
     } finally {
       setIsRequesting(false);
     }
   };
 
   const getPrice = async (coinId: string) => {
-    try{
+    try {
       let ret = await coingecko.coingecko.getPrice(coinId, "usd");
       console.log("get price == ", ret.data["matic-network"].usd);
       setEthPrice(ret.data["matic-network"].usd);
-    }catch (e) {
+    } catch (e) {
       setEthPrice("0.0");
-    }finally {
-
-    }    
-  }
+    } finally {
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(
       (function getInfoInterval(): any {
         console.log("get info called");
         getEthBalance();
+        getUSDCBalance();
         getPrice("matic-network");
         return getInfoInterval;
       })(),
@@ -151,11 +177,12 @@ export const WalletContextProvider = ({ children }: any) => {
         ethBalance,
         ethPrice,
         isRequesting,
+        usdcBalance,
         getWalletAddressByEmail,
         createWalletByEmail,
         getEthBalance,
         verifyEmail,
-        getPrice
+        getPrice,
       }}
     >
       {children}

@@ -21,7 +21,7 @@ function TokenInfoItem({ tokenName, unit, icon, amount, tokenPrice, diff }) {
             <Box>
               <img src={icon} style={{ width: "30px" }} />
             </Box>
-            <Box>
+            <Box paddingLeft={"8px"}>
               <Box>
                 <Typography variant="subtitle1">{tokenName}</Typography>
               </Box>

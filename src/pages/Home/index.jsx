@@ -24,7 +24,7 @@ const keyStore = KeyStore.getInstance();
 
 function HomePage() {
   const [open, setOpen] = React.useState(false);
-  const { getEthBalance, getWalletAddressByEmail, ethBalance, ethPrice } =
+  const { getEthBalance, getWalletAddressByEmail, ethBalance, ethPrice, usdcBalance } =
     useWalletContext();
   const navigate = useNavigate();
 
@@ -103,8 +103,8 @@ function HomePage() {
           <TokenInfoItem
             tokenName={"USDC"}
             unit={"USDC"}
-            amount={ethBalance}
-            tokenPrice={ethPrice}
+            amount={usdcBalance}
+            tokenPrice={usdcBalance}
             diff={"0.0"}
             icon={USDCIcon}
           />
