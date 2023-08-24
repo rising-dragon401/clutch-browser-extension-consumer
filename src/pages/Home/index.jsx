@@ -12,7 +12,7 @@ import useWalletContext from "../../context/hooks/useWalletContext";
 import KeyStore from "./../../lib/keystore";
 import TokenInfoItem from "../../components/TokenInfoItem";
 
-import EthIcon from "../../assets/tokens/eth.svg";
+import USDCIcon from "../../assets/tokens/usdc.png";
 import MaticIcon from "../../assets/tokens/matic.png";
 import { removeLocalStorage } from "../../lib/tools";
 // import { assetsList } from "../../config/local";
@@ -99,6 +99,14 @@ function HomePage() {
             tokenPrice={ethPrice}
             diff={"0.0"}
             icon={MaticIcon}
+          />
+          <TokenInfoItem
+            tokenName={"USDC"}
+            unit={"USDC"}
+            amount={ethBalance}
+            tokenPrice={ethPrice}
+            diff={"0.0"}
+            icon={USDCIcon}
           />
         </Box>
         {/* <Dialog open={open} onClose={handleClose} /> */}
