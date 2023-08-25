@@ -31,6 +31,7 @@ const account = {
 
 const transaction = {
   sendETH: (params: any) => axio.post("/transaction", params),
+  prefund: (params: any) => axio.post("/transaction/prefund", params)
 };
 export default {
   account,

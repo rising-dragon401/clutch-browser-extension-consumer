@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import NavigationHeader from "../../../components/NavigationHeader";
 import Button from "../../../components/Button";
@@ -16,6 +16,7 @@ import DialogPopup from "../../../components/DialogPopup";
 import useWalletContext from "../../../context/hooks/useWalletContext";
 import api from "../../../lib/api";
 import KeyStore from "../../../lib/keystore";
+import useQuery from "@src/hooks/useQuery";
 
 const keyStore = KeyStore.getInstance();
 
@@ -46,6 +47,7 @@ const BoldText675 = styled.p`
 function Transaction() {
   const location = useLocation();
   const theme = useTheme();
+  const { getPrefund } = useQuery();
   const navigate = useNavigate();
 
   const { receiver, amount } = location.state;
@@ -65,7 +67,7 @@ function Transaction() {
   const handleProceed = async () => {
     try {
       setIsLoading(true);
-      let addr = await keyStore.getAddress();            
+      let addr = await keyStore.getAddress();
       let ret = await api.transaction.sendETH({
         to: receiver,
         from: addr,
@@ -73,7 +75,7 @@ function Transaction() {
       });
       console.log(ret, "ret");
       if (ret.payload.Success.status == "Success") {
-        navigate("/send_Completed", {state: {amount}});
+        navigate("/send_Completed", { state: { amount } });
       }
     } catch (e) {
       console.log("error ", e);
@@ -82,6 +84,19 @@ function Transaction() {
     }
   };
 
+  useEffect(() => {
+    (async function prefund() {
+      try{
+        setIsLoading(true);
+        let ret = await getPrefund(amount, receiver, walletAddress, "send_eth");
+
+      }catch (e) {
+        console.log("Err : ", e);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, []);
   return (
     <>
       <NavigationHeader label="Send" info />
