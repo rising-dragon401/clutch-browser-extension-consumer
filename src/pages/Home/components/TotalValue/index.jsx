@@ -6,7 +6,7 @@ import useWalletContext from "../../../../context/hooks/useWalletContext";
 
 function TotalValue() {
   const theme = useTheme();
-  const { ethBalance, ethPrice } =
+  const { ethBalance, ethPrice, usdcBalance } =
     useWalletContext();
   return (
     <Box
@@ -32,7 +32,7 @@ function TotalValue() {
         }}
       >
         <Box>
-          <Typography variant="h2"> $ {(parseFloat(ethBalance) * parseFloat(ethPrice)).toPrecision(4)} </Typography>
+          <Typography variant="h2"> $ {(parseFloat(ethBalance) * parseFloat(ethPrice) + parseFloat(usdcBalance)).toPrecision(4)} </Typography>
         </Box>
         <Box>
           <Box>

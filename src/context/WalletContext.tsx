@@ -8,6 +8,7 @@ import ERC20Token from "@src/abi/ERC20.json";
 const ethProvider = new ethers.JsonRpcProvider(config.rpcProvider);
 interface IWalletContext {
   ethProvider: ethers.JsonRpcProvider;
+  chainId: number;
   account: string;
   walletType: string;
   walletAddress: string;
@@ -24,6 +25,7 @@ interface IWalletContext {
 
 export const WalletContext = createContext<IWalletContext>({
   ethProvider,
+  chainId: 0,
   account: "",
   walletAddress: "",
   walletType: "",
@@ -49,6 +51,7 @@ export const WalletContext = createContext<IWalletContext>({
 });
 
 export const WalletContextProvider = ({ children }: any) => {
+  const [chainNum, setChainId] = useState<number>(0);
   const [account, setAccount] = useState<string>("");
   const [walletAddress, setWalletAddress] = useState<string>("");
   const [walletType, setWalletType] = useState<string>("");
@@ -165,12 +168,18 @@ export const WalletContextProvider = ({ children }: any) => {
       })(),
       10000
     );
+
+      (async function getBlockchainInfo(): Promise<any> {
+        const {chainId} = await ethProvider.getNetwork();
+        setChainId(Number(chainId));
+      })();
     return () => clearInterval(interval);
   }, [walletAddress]);
   return (
     <WalletContext.Provider
       value={{
         ethProvider,
+        chainId: chainNum,
         account,
         walletType,
         walletAddress,
