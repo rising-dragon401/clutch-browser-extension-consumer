@@ -81,7 +81,7 @@ const Button = (props) => {
   };
 
   let loaderStyle = {
-    color: "#fff"
+    color: "#fff",
   };
   if (isDisabled) {
     buttonType = {
@@ -97,8 +97,8 @@ const Button = (props) => {
       svgColor: theme.palette.text_colors.primary_550,
     };
     loaderStyle = {
-      color: theme.palette.key_colors.primary_475
-    }
+      color: theme.palette.key_colors.primary_475,
+    };
   } else if (variant === BUTTON_TYPE.DISABLE) {
     buttonType = {
       color: theme.palette.key_colors_interactions.primary_pressed_550,
@@ -123,6 +123,11 @@ const Button = (props) => {
       color: theme.palette.text_colors.neutral_800,
       background: theme.palette.text_colors.neutral_0,
       border: `1px solid ${theme.palette.text_colors.neutral_275}`,
+    };
+  } else if (variant === BUTTON_TYPE.TRANSPARENT) {
+    buttonType = {
+      background: theme.palette.text_colors.neutral_0,
+      border: '0px'
     };
   }
   return (
@@ -164,11 +169,11 @@ const Button = (props) => {
         </div>
       ) : (
         <div
-        style={{
-          display: "flex",
-          justifyContent: justifyContent ? justifyContent : "center",
-          alignItems: "center",
-        }}
+          style={{
+            display: "flex",
+            justifyContent: justifyContent ? justifyContent : "center",
+            alignItems: "center",
+          }}
         >
           {isLoading && (
             <Puff

@@ -1,3 +1,4 @@
+import React from "react";
 import useWalletContext from "@src/context/hooks/useWalletContext";
 import config from "@src/config";
 import api from "@src/lib/api";
@@ -5,11 +6,12 @@ import { ethers } from "ethers";
 import BigNumber from "bignumber.js";
 
 export default function useQuery() {
-  const { ethProvider, chainId } = useWalletContext();
+  const { ethProvider } = useWalletContext();
 
   const getGasPrice = async () => {
+    const { chainId } = await ethProvider.getNetwork();
     // if it's in the fixed price list, set fixed
-    if (chainId === 421613 || chainId === 42161) {
+    if (Number(chainId) === 421613 || Number(chainId) === 42161) {
       return {
         maxFeePerGas: `0x${ethers
           .parseUnits(config.defaultMaxFee, "gwei")
@@ -38,9 +40,10 @@ export default function useQuery() {
     value: string,
     to: string,
     from: string,
-    sendType: string
+    sendType: string,
+    ethPrice: string
   ) => {
-    const preFund = await api.transaction.prefund({
+    const preFund: any = await api.transaction.prefund({
       value,
       to,
       from,
@@ -48,22 +51,23 @@ export default function useQuery() {
     });
 
     const requiredEth = BigNumber(
-      preFund.data.payload.Success.missfund
+      preFund.payload.Success.missfund
     ).shiftedBy(-18);
-
+    
     if (sendType === "send_eth") {
       return {
-        requiredAmount: requiredEth.toFixed(),
+        requiredAmount: requiredEth.toPrecision(5),
+        requiredAsUSD: requiredEth.multipliedBy(ethPrice).toFixed()
       };
     } else {
       // erc20
-      const erc20Price = 1853;
+      let required = requiredEth
+      .multipliedBy(ethPrice)
+      .times(config.maxCostMultiplier)
+      .div(100);
       return {
-        requiredAmount: requiredEth
-          .times(erc20Price)
-          .times(config.maxCostMultiplier)
-          .div(100)
-          .toFixed(),
+        requiredAmount: required.toPrecision(5),
+        requiredAsUSD: required.toFixed()
       };
     }
   };

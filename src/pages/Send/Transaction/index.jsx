@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
+import { ethers } from "ethers";
 import NavigationHeader from "../../../components/NavigationHeader";
 import Button from "../../../components/Button";
 import {
@@ -17,6 +18,8 @@ import useWalletContext from "../../../context/hooks/useWalletContext";
 import api from "../../../lib/api";
 import KeyStore from "../../../lib/keystore";
 import useQuery from "@src/hooks/useQuery";
+import MaticIcon from "@src/assets/tokens/matic.png";
+import GasSelect from "../../../components/GasSelect";
 
 const keyStore = KeyStore.getInstance();
 
@@ -47,6 +50,7 @@ const BoldText675 = styled.p`
 function Transaction() {
   const location = useLocation();
   const theme = useTheme();
+  const { ethPrice } = useWalletContext();
   const { getPrefund } = useQuery();
   const navigate = useNavigate();
 
@@ -57,6 +61,10 @@ function Transaction() {
   const [openClutchPopup, setOpenClutchPopup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { walletAddress } = useWalletContext();
+  const [fee, setFee] = useState("");
+  const [usdFee, setUSDFee] = useState("");
+  const [payToken, setPayToken] = useState(ethers.ZeroAddress);
+
   const handleClose = () => {
     setOpenTotalPopup(false);
     setOpenEstimatePopup(false);
@@ -86,17 +94,32 @@ function Transaction() {
 
   useEffect(() => {
     (async function prefund() {
-      try{
+      try {
         setIsLoading(true);
-        let ret = await getPrefund(amount, receiver, walletAddress, "send_eth");
+        let walletAddr = await keyStore.getAddress();
+        let ret = await getPrefund(
+          amount,
+          receiver,
+          walletAddr,
+          "send_eth",
+          ethPrice
+        );
 
-      }catch (e) {
+        console.log("prefund", ret);
+        setFee(ret.requiredAmount);
+        setUSDFee(ret.requiredAsUSD);
+      } catch (e) {
         console.log("Err : ", e);
       } finally {
         setIsLoading(false);
       }
     })();
   }, []);
+
+  // const onPayToken
+  useEffect(()=>{
+
+  }, [payToken]);
   return (
     <>
       <NavigationHeader label="Send" info />
@@ -178,11 +201,7 @@ function Transaction() {
                   paddingBottom: "4px",
                 }}
               >
-                <EthIcon
-                  width="19.4px"
-                  height="19.4px"
-                  style={{ paddingRight: "4px" }}
-                />
+                <img src={MaticIcon} style={{ width: "20px" }} />
                 <Typography
                   variant="body1"
                   sx={{
@@ -190,7 +209,7 @@ function Transaction() {
                     color: theme.palette.text_colors.neutral_800,
                   }}
                 >
-                  {amount} ETH
+                  {amount} Matic
                 </Typography>
               </Box>
               {/* right bottom text */}
@@ -288,13 +307,21 @@ function Transaction() {
 
             {/* right text */}
             <Box>
-              <BoldText675
-                style={{
-                  marginBottom: "10px",
-                }}
+              <Box
+              sx={{
+                display:"flex",
+                alignItems: "baseline"
+              }}
               >
-                0.031 MATIC $0.019
-              </BoldText675>
+                <BoldText675
+                  style={{
+                    marginBottom: "10px",
+                  }}
+                >
+                  {isLoading == true && fee == "" ? "Loading..." : <>{fee} </>}                  
+                </BoldText675>
+                <GasSelect/>
+              </Box>
 
               <Box
                 sx={{

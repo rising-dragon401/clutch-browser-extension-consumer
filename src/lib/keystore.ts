@@ -21,10 +21,6 @@ export default class KeyStore {
     return "clutch-wallet-keystore-key";
   }
 
-  /**
-   * get the EOA address
-   * @returns EOA address, null is failed or no keystore
-   */
   public async getAddress(): Promise<string> {
     let val: string = await getLocalStorage("clutch-wallet-address");
     if (val == undefined) {
