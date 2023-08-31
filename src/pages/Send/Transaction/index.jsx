@@ -63,6 +63,7 @@ function Transaction() {
   const { walletAddress } = useWalletContext();
   const [fee, setFee] = useState("");
   const [usdFee, setUSDFee] = useState("");
+  const [isLoadingFee, setIsLoadingFee] = useState(false);
   const [payToken, setPayToken] = useState(ethers.ZeroAddress);
 
   const handleClose = () => {
@@ -95,14 +96,14 @@ function Transaction() {
   useEffect(() => {
     (async function prefund() {
       try {
-        setIsLoading(true);
+        setIsLoadingFee(true);
         let walletAddr = await keyStore.getAddress();
         let ret = await getPrefund(
           amount,
           receiver,
           walletAddr,
-          "send_eth",
-          ethPrice
+          ethPrice,
+          payToken
         );
 
         console.log("prefund", ret);
@@ -111,14 +112,9 @@ function Transaction() {
       } catch (e) {
         console.log("Err : ", e);
       } finally {
-        setIsLoading(false);
+        setIsLoadingFee(false);
       }
     })();
-  }, []);
-
-  // const onPayToken
-  useEffect(()=>{
-
   }, [payToken]);
   return (
     <>
@@ -308,19 +304,19 @@ function Transaction() {
             {/* right text */}
             <Box>
               <Box
-              sx={{
-                display:"flex",
-                alignItems: "baseline"
-              }}
+                sx={{
+                  display: "flex",
+                  alignItems: "baseline",
+                }}
               >
                 <BoldText675
                   style={{
                     marginBottom: "10px",
                   }}
                 >
-                  {isLoading == true && fee == "" ? "Loading..." : <>{fee} </>}                  
+                  {isLoadingFee == true ? "Loading..." : <>{fee} </>}
                 </BoldText675>
-                <GasSelect/>
+                <GasSelect gasToken={payToken} onChange={setPayToken} />
               </Box>
 
               <Box

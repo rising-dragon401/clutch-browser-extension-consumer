@@ -40,21 +40,32 @@ export default function useQuery() {
     value: string,
     to: string,
     from: string,
-    sendType: string,
-    ethPrice: string
+    ethPrice: string,
+    payToken: string,
   ) => {
-    const preFund: any = await api.transaction.prefund({
-      value,
-      to,
-      from,
-      send_type: sendType,
-    });
+    let prefund: any = null;
+    if(payToken == ethers.ZeroAddress) {
+      prefund = await api.transaction.prefund({
+        value,
+        to,
+        from,
+        send_type: "send_eth",
+      });
+    } else {
+      prefund = await api.transaction.prefund({
+        value,
+        to,
+        from,
+        send_type: "send_erc20",
+        pay_token:payToken
+      });
+    }
 
     const requiredEth = BigNumber(
-      preFund.payload.Success.missfund
+      prefund.payload.Success.missfund
     ).shiftedBy(-18);
     
-    if (sendType === "send_eth") {
+    if (payToken == ethers.ZeroAddress) {
       return {
         requiredAmount: requiredEth.toPrecision(5),
         requiredAsUSD: requiredEth.multipliedBy(ethPrice).toFixed()
