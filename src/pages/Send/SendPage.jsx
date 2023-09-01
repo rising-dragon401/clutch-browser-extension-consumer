@@ -100,7 +100,7 @@ function SendPage({ tokenAddress = "" }) {
                 onChange={(e) => setAmount(e.target.value)}
               />
             </InputField>
-            <SelectToken onClick={() => navigate("/check_assets")} /*sendToken={sendToken} onTokenChange={setSendToken}*/>
+            <SelectToken /*onClick={() => navigate("/check_assets")} sendToken={sendToken} onTokenChange={setSendToken}*/>
               <img src={MaticIcon} style={{ width: "30px" }} />
               <Typography variant="body1"> Matic </Typography>
               <ChevronDownIcon />
