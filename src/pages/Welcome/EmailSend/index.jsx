@@ -7,6 +7,7 @@ import Input from "../../../components/Input";
 import useWalletContext from "../../../context/hooks/useWalletContext";
 import KeyStore from "../../../lib/keystore";
 import InputBtn from "@src/components/InputBtn";
+import config from "../../../config";
 const Container = styled.div`
   padding: 16px;
 `;
@@ -26,7 +27,7 @@ function EmailSendPage() {
   };
 
   const checkVerifyCodeAndCreate = async () => {
-    let ret = await createWalletByEmail(email, verifyCode);
+    let ret = await createWalletByEmail(email, verifyCode, config.paymasterTokens);
 
     if (ret.status == "Success") {
       keyStore.setJWT(ret.payload.Success.jwt);

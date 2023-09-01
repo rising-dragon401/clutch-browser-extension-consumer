@@ -20,6 +20,8 @@ import KeyStore from "../../../lib/keystore";
 import useQuery from "@src/hooks/useQuery";
 import MaticIcon from "@src/assets/tokens/matic.png";
 import GasSelect from "../../../components/GasSelect";
+import BN from "bignumber.js";
+import config from "../../../config";
 
 const keyStore = KeyStore.getInstance();
 
@@ -51,20 +53,20 @@ function Transaction() {
   const location = useLocation();
   const theme = useTheme();
   const { ethPrice } = useWalletContext();
-  const { getPrefund } = useQuery();
+  const { getPrefund, getGasPrice } = useQuery();
   const navigate = useNavigate();
 
-  const { receiver, amount } = location.state;
+  const { receiver, amount, tx } = location.state;
   const [openTotalPopup, setOpenTotalPopup] = useState(false);
   const [openEstimatedPopup, setOpenEstimatePopup] = useState(false);
   const [openTransactionPopup, setOpenTransactionPopup] = useState(false);
   const [openClutchPopup, setOpenClutchPopup] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const { walletAddress } = useWalletContext();
+
   const [fee, setFee] = useState("");
-  const [usdFee, setUSDFee] = useState("");
   const [isLoadingFee, setIsLoadingFee] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [payToken, setPayToken] = useState(ethers.ZeroAddress);
+  const [userOp, setUserOp] = useState();
 
   const handleClose = () => {
     setOpenTotalPopup(false);
@@ -78,9 +80,8 @@ function Transaction() {
       setIsLoading(true);
       let addr = await keyStore.getAddress();
       let ret = await api.transaction.sendETH({
-        to: receiver,
+        user_op: userOp,
         from: addr,
-        value: amount,
       });
       console.log(ret, "ret");
       if (ret.payload.Success.status == "Success") {
@@ -94,28 +95,54 @@ function Transaction() {
   };
 
   useEffect(() => {
-    (async function prefund() {
-      try {
-        setIsLoadingFee(true);
-        let walletAddr = await keyStore.getAddress();
-        let ret = await getPrefund(
-          amount,
-          receiver,
-          walletAddr,
-          ethPrice,
-          payToken
-        );
-
-        console.log("prefund", ret);
-        setFee(ret.requiredAmount);
-        setUSDFee(ret.requiredAsUSD);
-      } catch (e) {
-        console.log("Err : ", e);
-      } finally {
-        setIsLoadingFee(false);
-      }
-    })();
+    formatUserOp();
   }, [payToken]);
+
+  async function formatUserOp() {
+    if (isLoadingFee == true) return;
+
+    await setIsLoadingFee(true);
+    try {
+      const { maxFeePerGas, maxPriorityFeePerGas } = await getGasPrice();
+      let selectedAddress = await keyStore.getAddress();
+
+      let ret = await api.transaction.formatUserOp({
+        maxFeePerGas,
+        maxPriorityFeePerGas,
+        selectedAddress,
+        rawTxs: [tx],
+        payToken,
+      });
+      
+      const requiredEth = BN(ret.payload.Success.prefund.missfund).shiftedBy(
+        -18
+      );
+
+      let uOp = ret.payload.Success.user_op;            
+      setUserOp(uOp);
+
+      console.log(requiredEth.toString(), "============");
+
+      if (payToken == ethers.ZeroAddress) {
+        setFee(requiredEth.toPrecision(5));
+      } else {
+        let required = requiredEth
+          .multipliedBy(ethPrice)
+          .times(config.maxCostMultiplier)
+          .div(100);
+        setFee(required.toPrecision(5));
+      }
+    } catch (e) {
+      console.log("err on formatUserOp", e);
+    } finally {
+      await setIsLoadingFee(false);
+    }
+  }
+
+  useEffect(() => {
+    formatUserOp();
+  }, []);
+
   return (
     <>
       <NavigationHeader label="Send" info />

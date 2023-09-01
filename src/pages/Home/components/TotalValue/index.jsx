@@ -32,7 +32,7 @@ function TotalValue() {
         }}
       >
         <Box>
-          <Typography variant="h2"> $ {(parseFloat(ethBalance) * parseFloat(ethPrice) + parseFloat(usdcBalance)).toPrecision(4)} </Typography>
+          <Typography variant="h2"> $ {(parseFloat(ethBalance) * parseFloat(ethPrice) + parseFloat(usdcBalance)).toFixed(4)} </Typography>
         </Box>
         <Box>
           <Box>

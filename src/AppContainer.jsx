@@ -38,6 +38,7 @@ import KeyStore from "./lib/keystore";
 import WelcomePage from "./pages/Welcome";
 import { removeLocalStorage } from "./lib/tools";
 import ProtectedRoute from "./routes/ProtectedRoutes";
+import { ethers } from "ethers";
 
 const Container = styled("div")(({ theme }) => ({
   width: "375px",

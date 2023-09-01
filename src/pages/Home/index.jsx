@@ -104,7 +104,7 @@ function HomePage() {
             tokenName={"USDC"}
             unit={"USDC"}
             amount={usdcBalance}
-            tokenPrice={usdcBalance}
+            tokenPrice={"1"}
             diff={"0.0"}
             icon={USDCIcon}
           />

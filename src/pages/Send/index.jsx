@@ -6,6 +6,7 @@ import { useTheme } from "@mui/material";
 import Header from "../../components/Header";
 import Button from "../../components/Button";
 import SendPage from "./SendPage";
+import { ethers } from "ethers";
 
 const Container = styled("div")(({ theme }) => ({
   width: "375px",
@@ -22,7 +23,7 @@ function Send() {
       <Header page="send" />
 
       <Routes>
-        <Route path="home" element={<SendPage />} />
+        <Route path="home" element={<SendPage  tokenAddress={ethers.ZeroAddress}/>} />
       </Routes>
     </>
   );

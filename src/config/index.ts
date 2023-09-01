@@ -20,7 +20,7 @@ export const assetsList: ITokenBalanceItem[] = [
     symbol: "MATIC",
   },
   {
-    contractAddress: "0xe6b8a5CF854791412c1f6EFC7CAf629f5Df1c747",
+    contractAddress: "0x145eadd18a6adea9857804369732bc57f2b57820",
     decimals: 6,
     name: "USDC",
     symbol: "USDC",

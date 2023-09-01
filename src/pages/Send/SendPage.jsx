@@ -7,6 +7,8 @@ import Input from "../../components/Input";
 import { DivFlex } from "../../components";
 import { EthIcon, ChevronDownIcon } from "../../components/Svg";
 import MaticIcon from "@src/assets/tokens/matic.png";
+import useTransaction from "@src/hooks/useTransaction";
+import { ethers } from "ethers";
 
 const InputField = styled.div`
   flex-basis: 50%;
@@ -46,14 +48,24 @@ const SelectToken = styled.div`
   border-radius: 10px;
 `;
 
-function SendPage() {
+function SendPage({ tokenAddress = "" }) {
   const navigate = useNavigate();
+  const { sendEth, sendErc20 } = useTransaction();
   const [amount, setAmount] = useState("");
   const [receiver, setReceiver] = useState("");
+  const [sendToken, setSendToken] = useState(tokenAddress);
   const [error, setError] = useState("");
-  const onClickSend = () => {
+
+  const onClickSend = () => {    
     if (receiver && amount) {
-      navigate("/send/transaction", { state: { receiver, amount } });
+      let tx;
+      if(sendToken === ethers.ZeroAddress) {
+        tx = sendEth(receiver, amount);
+      } else {
+        tx = sendErc20(sendToken, receiver, amount, 18);
+      }
+      console.log(tx, "==========");
+      navigate("/send/transaction", { state: { receiver, amount, tx } });
     } else {
       setError("Please input the receiver address and amount");
     }
@@ -88,7 +100,7 @@ function SendPage() {
                 onChange={(e) => setAmount(e.target.value)}
               />
             </InputField>
-            <SelectToken onClick={() => navigate("/check_assets")}>
+            <SelectToken onClick={() => navigate("/check_assets")} /*sendToken={sendToken} onTokenChange={setSendToken}*/>
               <img src={MaticIcon} style={{ width: "30px" }} />
               <Typography variant="body1"> Matic </Typography>
               <ChevronDownIcon />
