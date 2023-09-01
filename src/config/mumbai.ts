@@ -12,5 +12,5 @@ export default {
   support1559: true,
   defaultMaxFee: "1700000000",
   defaultMaxPriorityFee: "1500000000",
-  maxCostMultiplier: 110,
+  maxCostMultiplier: 271,
 };

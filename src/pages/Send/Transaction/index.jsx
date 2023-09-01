@@ -124,7 +124,8 @@ function Transaction() {
       console.log(requiredEth.toString(), "============");
 
       if (payToken == ethers.ZeroAddress) {
-        setFee(requiredEth.toPrecision(5));
+        let required = requiredEth.times(137).div(100);
+        setFee(required.toPrecision(5));
       } else {
         let required = requiredEth
           .multipliedBy(ethPrice)

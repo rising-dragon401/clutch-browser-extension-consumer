@@ -161,7 +161,7 @@ export const WalletContextProvider = ({ children }: any) => {
       (function getInfoInterval(): any {        
         getEthBalance();
         getUSDCBalance();
-        // getPrice("matic-network");
+        // getPrice("matic-network");        
         return getInfoInterval;
       })(),
       10000
@@ -169,6 +169,8 @@ export const WalletContextProvider = ({ children }: any) => {
 
       (async function getBlockchainInfo(): Promise<any> {
         const {chainId} = await ethProvider.getNetwork();
+        // const feeData = await ethProvider.getFeeData();
+        // console.log("fee Data =========== ", feeData);
         setChainId(Number(chainId));
       })();
     return () => clearInterval(interval);
