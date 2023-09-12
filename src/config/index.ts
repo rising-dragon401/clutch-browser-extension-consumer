@@ -30,7 +30,7 @@ export const assetsList: ITokenBalanceItem[] = [
 export default {
   walletName: "Clutch Wallet",
   coinGeckoURL: "https://api.coingecko.com/api/v3",
-  // ...localConf,
+  ...localConf,
   // ...prodConf,
-  ...mumbaiConf
+  // ...mumbaiConf
 };
