@@ -51,6 +51,14 @@ function HomePage() {
     //   await removeLocalStorage("clutch-wallet-email");
     // }
     // callRemoveLocalStorage();
+    const timeout = setTimeout(() => {
+      setOpen(true);
+    }, 100);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+    
   }, []);
 
   return (

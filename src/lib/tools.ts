@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import browser from "webextension-polyfill";
 
 export function notify(title: string, message: string) {
@@ -120,3 +121,30 @@ export async function setGuardianName(
   guardianNameMapping[address] = name;
   await setLocalStorage("guardianNameMapping", guardianNameMapping);
 }
+
+export const validateEmail = (email?: string) => {
+  if (!email) return false;
+  const emialRegex =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return emialRegex.test(String(email).toLowerCase());
+};
+
+export const getMessageType = (msg: string) => {
+  if (msg.startsWith("0x") && msg.length === 66) {
+      return "hash";
+  } else {
+      return "text";
+  }
+};
+
+export const nextRandomId = () => {
+  return nanoid();
+};
+
+export const formatIPFS = (url: string) => {
+  if (url && url.includes("ipfs://")) {
+      return url.replace("ipfs://", "https://ipfs.io/ipfs/");
+  } else {
+      return url;
+  }
+};
