@@ -15,7 +15,7 @@ export const MIN_GUARDIAN_NUMBER = 1; // 最大guardian数
 
 export interface GuardianStore {
     guardians: string[];
-    guardianNames: any;
+    guardianNames: string[];
     threshold: number;
     slot: any;
     slotInitInfo: any;
@@ -64,7 +64,7 @@ export interface GuardianStore {
 
 const createGuardianSlice = immer<GuardianStore>((set, get) => ({
     guardians: [],
-    guardianNames: null,
+    guardianNames: [],
     threshold: 0,
     slot: null,
     slotInitInfo: null,
