@@ -21,8 +21,7 @@ export default function useForm(props: any) {
     const [pristine, setPristine] = useState<boolean>(true)
 
     useEffect(() => {
-        const errors = validate(values, restProps)
-        console.log('validate', values, restProps)
+        const errors = validate(values, restProps)        
         setErrors(errors)
 
         if (Object.keys(errors).length) {

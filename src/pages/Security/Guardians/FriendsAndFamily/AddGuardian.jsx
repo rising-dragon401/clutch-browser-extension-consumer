@@ -7,6 +7,7 @@ import Input from "../../../../components/Input";
 import { useGuardianStore } from "@src/store/guardian";
 import useForm from "@src/hooks/useForm";
 import { nextRandomId } from "@src/lib/tools";
+import { ethers } from "ethers";
 
 const getDefaultGuardianIds = (count) => {
   const ids = [];
@@ -31,8 +32,7 @@ const getFieldsByGuardianIds = (ids) => {
   return fields;
 };
 
-const getInitialValues = (ids, guardians, guardianNames) => {
-  console.log("=====================", guardians, guardianNames);
+const getInitialValues = (ids, guardians, guardianNames) => {  
   const idCount = ids.length;
   const guardianCount = guardians.length;
   const count = idCount > guardianCount ? idCount : guardianCount;
@@ -73,6 +73,25 @@ const validate = (values) => {
   return errors;
 };
 
+const getRecommandCount = (c) => {
+  if (!c) {
+    return 0
+  }
+
+  return Math.ceil(c / 2)
+}
+
+const amountValidate = (values, props) => {
+  const errors = {}
+
+  if (!values.amount || !Number.isInteger(Number(values.amount)) || Number(values.amount) < 1 || Number(values.amount) > Number(props.guardiansCount)) {
+    errors.amount = 'Invalid Amount'
+  }
+
+  return errors
+}
+
+
 function AddGuardian() {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -107,6 +126,7 @@ function AddGuardian() {
     getFieldsByGuardianIds(defaultGuardianIds)
   );
   const [guardiansList, setGuardiansList] = useState([]);
+  const [amountData, setAmountData] = useState({})
 
   const {
     values,
@@ -128,8 +148,18 @@ function AddGuardian() {
     ),
   });
 
+  const amountForm = useForm({
+    fields: ['amount'],
+    validate: amountValidate,
+    restProps: amountData,
+    initialValues: {
+      amount: threshold || getRecommandCount(amountData.guardiansCount || 0)
+    }
+  })
+
   const handleSubmit = async () => {
     try {
+      
       const guardiansList = guardianIds
         .map((id) => {
           const addressKey = `address_${id}`;
@@ -151,9 +181,19 @@ function AddGuardian() {
       console.log("guardianAddresses", guardianAddresses);
       console.log("guardianNames", guardianNames);
       console.log("threshold", threshold);
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    }
     // navigate("/add_guardian");
   };
+
+  useEffect(() => {
+    setGuardiansList(Object.keys(values).filter(key => key.indexOf('address') === 0).map(key => values[key]).filter(address => !!String(address).trim().length))
+  }, [values])
+
+  useEffect(() => {
+    setAmountData({ guardiansCount: guardiansList.length })
+  }, [guardiansList])
 
   return (
     <>
@@ -170,15 +210,17 @@ function AddGuardian() {
         <Box
           sx={{
             display: "flex",
+            gap:"8px"
           }}
         >
           <Input
+            width="180px"
             placeholder="Name"
-            onChange={onChange(`name_${guardianIds[guardianIds.length - 1]}`)}
+            onChangeValue={onChange(`name_${guardianIds[guardianIds.length - 1]}`)}
           />
           <Input
             placeholder="Enter address or ENS"
-            onChange={onChange(`address_${guardianIds[guardianIds.length - 1]}`)}
+            onChangeValue={onChange(`address_${guardianIds[guardianIds.length - 1]}`)}
           />
         </Box>
 

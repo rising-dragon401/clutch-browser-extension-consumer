@@ -24,14 +24,26 @@ const InputField = styled.input`
   }
 `;
 
-function Input({ placeholder, value, onChange, width = "100%", ...props }) {
+function Input({
+  placeholder,
+  value,
+  onChange,
+  onChangeValue,
+  width = "100%",
+  ...props
+}) {
   return (
-    <Box sx={{width: width}}>
+    <Box sx={{ width: width }}>
       <InputField
         placeholder={placeholder}
         value={value}
         onChange={(e) => {
-          onChange(e);
+          if (onChange) {
+            onChange(e);
+          }
+          if (onChangeValue) {
+            onChangeValue(e.target.value);
+          }
         }}
         {...props}
       />
