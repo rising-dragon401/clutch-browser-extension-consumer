@@ -34,6 +34,10 @@ const transaction = {
   prefund: (params: any) => axio.post("/transaction/prefund", params),
   formatUserOp: (params: any) => axio.post("/transaction/format-user-op", params),
 };
+
+const socialRecovery = {
+  editGuardian: (params: any) => axio.post("/guardian/edit", params)
+}
 export default {
   account,
   transaction
